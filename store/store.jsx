@@ -3,11 +3,11 @@ import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import  authSlice  from "./authenticate";
 import playerSlice from './track'
-import loadingSlice from './appSlice'
+
 const rootReducer = combineReducers({
   auth: authSlice,
   player:playerSlice,
-  loading:loadingSlice
+ 
 });
 
 
