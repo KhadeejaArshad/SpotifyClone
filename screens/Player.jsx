@@ -7,7 +7,7 @@ import {
   SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {use, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
 import {useState} from 'react';
@@ -26,11 +26,10 @@ import {
   moderateScale,
   horizontalScale,
 } from '../utils/fonts/fonts';
-import {getcurrentTrack, playTrack} from '../utils/http';
+import {fetchLiked, getcurrentTrack, } from '../utils/http';
 import {setcurrAlbum} from '../store/track';
 export default function Player({navigation}) {
   const [track, setTrack] = useState();
-  
 
   const id = useSelector(state => state.player.currentTrack);
   const token = useSelector(state => state.auth.token);
@@ -43,20 +42,22 @@ export default function Player({navigation}) {
   const [replay, setReplay] = useState(false);
 
   const [isPlayerReady, setIsPlayerReady] = useState(false);
+  const [liked,setLiked]=useState(false)
+
+ 
 
   useEffect(() => {
     const loadTracks = async () => {
       if (token && id) {
         try {
           const current = await getcurrentTrack(token, id);
-          console.log('Iam inPlayer', current);
+          const like=await fetchLiked(token,id);
+          console.log(like);
           
+          setLiked(like)
+
           dispatch(setcurrAlbum(current?.album?.id));
           console.log(current?.album?.id);
-          
-          
-          
-          
 
           setTrack(current);
         } catch (err) {
@@ -128,18 +129,22 @@ export default function Player({navigation}) {
             {track?.artists?.[0]?.name || 'Unknown Artist'}
           </TextCmp>
           <Pressable
-            onPress={() => setPressed(!pressed)}
+            onPress={() => {
+            
+             
+              setPressed(!pressed);
+            }}
             style={({pressed}) => [
               styles.pressable,
               pressed && styles.pressedStyle,
             ]}>
             <Image
               source={
-                pressed
+                liked
                   ? require('../assets/Images/Player/like.png')
                   : require('../assets/Images/Player/unlike.png')
               }
-              style={[styles.heart]}
+              style={styles.heart}
             />
           </Pressable>
         </View>
@@ -173,7 +178,6 @@ export default function Player({navigation}) {
             onPress={async () => {
               try {
                 await TrackPlayer.skipToPrevious();
-                
               } catch (e) {
                 console.warn('No previous track', e);
               }
@@ -184,8 +188,10 @@ export default function Player({navigation}) {
               if (playing) {
                 await TrackPlayer.pause();
               } else {
-                  await playPreviewUrl('https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',track)
-              
+                await playPreviewUrl(
+                  'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
+                  track,
+                );
               }
               dispatch(setPlaying(!playing));
             }}>

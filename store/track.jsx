@@ -6,7 +6,7 @@ const initialState = {
   trackList: [],
   currentAlbum: null,
   curOpenAlbum: null,
-  favourite: [],
+
 };
 
 const playerSlice = createSlice({
@@ -30,13 +30,9 @@ const playerSlice = createSlice({
     },
     resetPlayer: () => initialState,
   },
-  addFavorite: (state, action) => {
-    state.favourite.push(action.payload.id);
+   
   },
-  removeFavourite: (state, action) => {
-    state.favourite.splice(state.favourite.indexOf(action.payload.id), 1);
-  },
-});
+);
 
 export const {
   setcurTrack,
@@ -45,8 +41,7 @@ export const {
   setcurrAlbum,
   setOpenAlbum,
   resetPlayer,
-  addFavorite,
-  removeFavourite,
+
 } = playerSlice.actions;
 
 export default playerSlice.reducer;

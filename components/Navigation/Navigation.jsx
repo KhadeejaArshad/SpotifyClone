@@ -168,7 +168,7 @@ useEffect(() => {
         <BottomTab.Screen
         name="LikedSongs"
         component={LikedItems}
-        options={{ headerShown: false, 
+        options={{ headerTitle:'LikedSongs', 
           tabBarItemStyle:{display:'none'}
         }}
       />

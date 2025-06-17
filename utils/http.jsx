@@ -495,3 +495,39 @@ export async function fetchCategories(accesstoken) {
     );
   }
 }
+
+export async function fetchLiked(accesstoken, id) {
+  try {
+    const res = await spotifyAPI.get(`/me/tracks/contains?ids=${id}`, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+
+    return res.data[0];
+  } catch (error) {
+    console.error('Failed to fetch', error.response?.data || error.message);
+    return [];
+  }
+}
+export async function fetchSavedSongs(accesstoken) {
+  try {
+    const res = await spotifyAPI.get(`/me/tracks`, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+       params: {
+        market: 'ES',
+        limit: 10,
+        offsett:5
+      },
+    });
+
+    return res.data;
+  } catch (error) {
+    console.error(
+      'Failed to fetch album details:',
+      error.response?.data || error.message,
+    );
+  }
+}

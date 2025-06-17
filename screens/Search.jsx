@@ -22,7 +22,7 @@ import { verticalScale,moderateScale,horizontalScale } from '../utils/fonts/font
 const Search = () => {
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
-   const id = useSelector(state => state.player.currentTrack);
+    const id = useSelector(state => state.player.currentTrack);
 
   return (
     <View style={styles.container}>
