@@ -25,5 +25,8 @@ export const images = {
   apple:require('../assets/Images/Login/apple.png'),
   facebook:require('../assets/Images/Login/facebook.png'),
   download:require('../assets/Images/AlbumView/M.png'),
-  cover102: require('../assets/Images/Player/main.png')
+
+  cover: require('../assets/Images/Player/main.png')
+
+
 };
