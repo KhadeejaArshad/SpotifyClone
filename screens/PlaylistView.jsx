@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable,SafeAreaView,ActivityIndicator} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
@@ -25,7 +25,7 @@ export default function PlaylistView({route,navigation}) {
   const [playlist, setPlaylist] = useState(null);
   const currentAlbumId=useSelector(state=>state.player.currentAlbum);
   const trackid=useSelector(state=>state.player.currentTrack)
-
+  const [loading,setLoading]= useState(true);
 
   const dispatch = useDispatch();
   const id = route.params.id;
@@ -33,7 +33,7 @@ export default function PlaylistView({route,navigation}) {
   const playing = useSelector(state => state.player.isPlaying);
 
     useTrackPlayerEvents(
-      [Event.PlaybackState, Event.PlaybackTrackChanged],
+      [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
       async event => {
         if (event.type === Event.PlaybackState) {
           if (event.state === State.Playing) {
@@ -53,7 +53,7 @@ export default function PlaylistView({route,navigation}) {
         });
   
         if (
-          event.type === Event.PlaybackTrackChanged &&
+          event.type === Event.PlaybackActiveTrackChanged &&
           event.nextTrack != null
         ) {
           const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
@@ -117,21 +117,41 @@ export default function PlaylistView({route,navigation}) {
   useEffect(() => {
     const loadTracks = async () => {
       if (token) {
+      
+      
+      setLoading(true);
+      setPlaylist(null)
         try {
           const data = await fetchPlaylist(id, token);
 
-          console.log("PLAYLISTDATA,",data);
+        
           setPlaylist(data);
           
 
         } catch (err) {
           console.error('Error fetching album:', err);
+        }finally{
+          setLoading(false)
         }
       }
     };
     loadTracks();
   }, [token, id]);
 
+    if (loading) {
+      return (
+        <LinearGradient colors={['#962419', '#661710', '#430E09']}
+        style={styles.linearGradient}>
+             <SafeAreaView style={styles.emptyState}>
+          <ActivityIndicator size="large" color="#1DB954" />
+        </SafeAreaView>
+        </LinearGradient>
+       
+  
+        
+        
+      );
+    }
   return (
     <LinearGradient
       colors={['#962419', '#661710', '#430E09']}
@@ -333,5 +353,10 @@ const styles = StyleSheet.create({
   },
   artistdesc: {
     flexDirection: 'row',
+  },
+   emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

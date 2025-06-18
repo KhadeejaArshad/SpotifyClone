@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable,SafeAreaView,ActivityIndicator} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
@@ -39,13 +39,14 @@ export default function AlbumView({navigation, route}) {
   const playing = useSelector(state => state.player.isPlaying);
   const trackid = useSelector(state => state.player.currentTrack);
   const currentAlbumId = useSelector(state => state.player.currentAlbum);
+  const [loading, setLoading] = useState(true);
 
   function getYear(date) {
     const newDate = new Date(date);
     return newDate.getFullYear();
   }
   useTrackPlayerEvents(
-    [Event.PlaybackState, Event.PlaybackTrackChanged],
+    [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
     async event => {
       if (event.type === Event.PlaybackState) {
         if (event.state === State.Playing) {
@@ -65,7 +66,7 @@ export default function AlbumView({navigation, route}) {
       });
 
       if (
-        event.type === Event.PlaybackTrackChanged &&
+        event.type === Event.PlaybackActiveTrackChanged &&
         event.nextTrack != null
       ) {
         const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
@@ -122,29 +123,50 @@ export default function AlbumView({navigation, route}) {
 
     setup();
   }, []);
-  useEffect(() => {
-    const loadTracks = async () => {
-      if (token) {
-        try {
-          const data = await fetchAlbumView(id, token);
+ useEffect(() => {
+  const loadTracks = async () => {
+    if (token && id) {
+      
+      setLoading(true);
+      setAlbum(null);
+      setTrack(null);
+      setArtist(null);
 
-          const trackdata = await fetchAlbumTrack(id, token);
-          const artistId = data.artists[0].id;
-          const artistdata = await fetchArtist(artistId, token);
-          console.log(artistdata);
-          setArtist(artistdata);
+      try {
+        const data = await fetchAlbumView(id, token);
+        const trackdata = await fetchAlbumTrack(id, token);
+        const artistId = data.artists[0].id;
+        const artistdata = await fetchArtist(artistId, token);
 
-          setAlbum(data);
-          setTrack(trackdata.items);
-        } catch (err) {
-          console.error('Error fetching album:', err);
-        }
+        setAlbum(data);
+        setTrack(trackdata.items);
+        setArtist(artistdata);
+      } catch (err) {
+        console.error('Error fetching album:', err);
+      } finally {
+        setLoading(false);
       }
-    };
-    loadTracks();
-  }, [token, id]);
+    }
+  };
+
+  loadTracks();
+}, [token, id]);
 
 
+  if (loading) {
+    return (
+      <LinearGradient colors={['#962419', '#661710', '#430E09']}
+      style={styles.linearGradient}>
+           <SafeAreaView style={styles.emptyState}>
+        <ActivityIndicator size="large" color="#1DB954" />
+      </SafeAreaView>
+      </LinearGradient>
+     
+
+      
+      
+    );
+  }
 
 
   return (
@@ -347,4 +369,13 @@ const styles = StyleSheet.create({
   artistdesc: {
     flexDirection: 'row',
   },
+   emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  root:{
+    flex:1,
+    backgroundColor:'#111111'
+  }
 });

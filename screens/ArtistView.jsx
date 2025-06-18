@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable,ActivityIndicator,SafeAreaView} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
@@ -19,6 +19,7 @@ export default function ArtistView({route, navigation}) {
   const [pressed, setPressed] = useState(false);
   const [playlist, setPlaylist] = useState(null);
   const [albums, setAlbums] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const id = route.params.id;
@@ -67,6 +68,12 @@ export default function ArtistView({route, navigation}) {
   useEffect(() => {
     const loadTracks = async () => {
       if (token) {
+      
+      setLoading(true);
+      setAlbums(null);
+      setPlaylist(null)
+      
+     
         try {
           const data = await fetchArtist(id, token);
           const tracks = await fetchArtistTrack(id, token);
@@ -77,11 +84,30 @@ export default function ArtistView({route, navigation}) {
           setPlaylist(data);
         } catch (err) {
           console.error('Error fetching album:', err);
+        }finally{
+          setLoading(false)
         }
       }
     };
     loadTracks();
   }, [token, id]);
+
+
+  
+    if (loading) {
+      return (
+        <LinearGradient colors={['#962419', '#661710', '#430E09']}
+        style={styles.linearGradient}>
+             <SafeAreaView style={styles.emptyState}>
+          <ActivityIndicator size="large" color="#1DB954" />
+        </SafeAreaView>
+        </LinearGradient>
+       
+  
+        
+        
+      );
+    }
 
   return (
     <LinearGradient
@@ -255,5 +281,10 @@ const styles = StyleSheet.create({
   },
   desccard: {
     flex: 1,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
