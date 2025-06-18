@@ -16,7 +16,10 @@ const authSlice=createSlice({
         },
         logout:(state,action)=>{
             state.token=null
-            state.isAuthenticate=false
+            state.isAuthenticate=false,
+            state.expireTime=null,
+            state.refreshToken=null,
+            state.usertoken=null
         },
         setRefreshToken:(state,action)=>{
             state.refreshToken=action.payload
