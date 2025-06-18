@@ -8,7 +8,7 @@ export default function LibButton({children, onPress, active = false}) {
       active && styles.activeButton
     ]}>
       <Pressable onPress={onPress}>
-        <TextCmp alignment="center" size={12}>{children}</TextCmp>
+        <TextCmp alignment="center" color={active ? 'black' : 'white'} weight="Demi" size={12}>{children}</TextCmp>
       </Pressable>
     </View>
   );
@@ -16,8 +16,9 @@ export default function LibButton({children, onPress, active = false}) {
 
 const styles = StyleSheet.create({
   buttonOuterContainer: {
-    borderColor: '#7F7F7F',
-    borderWidth: moderateScale(1),
+    backgroundColor: '#292828',
+    marginTop:verticalScale(10),
+    
     borderRadius: moderateScale(24),
     paddingVertical: verticalScale(10),
     paddingHorizontal: horizontalScale(20),
@@ -25,8 +26,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeButton: {
-    borderColor: '#1ED760',
-    backgroundColor: '#1ED76020',
+    backgroundColor: '#1ED760',
+    
+   
+    
   },
 
 });
