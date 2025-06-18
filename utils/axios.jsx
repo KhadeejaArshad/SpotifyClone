@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { store } from '../store/store';
 import { refreshSpotifyToken } from './refresh';
+import { logout } from '../store/authenticate';
+import { navigate } from './Navigationservice';
 
 const spotifyAPI = axios.create({
   baseURL: 'https://api.spotify.com/v1',
@@ -22,6 +24,9 @@ spotifyAPI.interceptors.request.use(
 );
 
 
+
+
+
 spotifyAPI.interceptors.response.use(
   res => res,
   async error => {
@@ -35,17 +40,22 @@ spotifyAPI.interceptors.response.use(
       originalRequest._retry = true;
 
       const result = await store.dispatch(refreshSpotifyToken());
-
-      // If refresh succeeded, retry the request
       const newAccessToken = store.getState().auth.token;
+
       if (newAccessToken) {
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return spotifyAPI(originalRequest);
+      } else {
+        
+        dispatch(logout());
+       
+        navigate('login');
       }
     }
 
     return Promise.reject(error);
-  },
+  }
 );
+
 
 export default spotifyAPI;
