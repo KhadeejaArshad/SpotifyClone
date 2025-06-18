@@ -22,7 +22,7 @@ const Library = () => {
           const playlists = await fetchMyPlayist(token);
           const albums = await fetchMyAlbum(token);
           const artist=await fetchMyArtist(token);
-          console.log(artist);
+         
           
 
           const playlistItems = playlists.items.map(item => ({
