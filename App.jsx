@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
+import { navigationRef } from './utils/Navigationservice';
 
 import AntDesign from '@react-native-vector-icons/ant-design';
 
@@ -75,7 +76,7 @@ function AppWithBootstrap() {
 
   return (
     <>
-      <NavigationContainer onReady={() => BootSplash.hide()}>
+      <NavigationContainer ref={navigationRef} onReady={() => BootSplash.hide()}>
         {loggedIn ? <AuthenticatedStack /> : <AuthStack />}
       </NavigationContainer>
     </>
