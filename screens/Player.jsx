@@ -26,8 +26,10 @@ import {
   moderateScale,
   horizontalScale,
 } from '../utils/fonts/fonts';
-import {fetchLiked, getcurrentTrack, } from '../utils/http';
+import {fetchLiked, getcurrentTrack} from '../utils/http';
 import {setcurrAlbum} from '../store/track';
+import {useProgress} from 'react-native-track-player';
+
 export default function Player({navigation}) {
   const [track, setTrack] = useState();
 
@@ -42,22 +44,19 @@ export default function Player({navigation}) {
   const [replay, setReplay] = useState(false);
 
   const [isPlayerReady, setIsPlayerReady] = useState(false);
-  const [liked,setLiked]=useState(false)
-
- 
+  const [liked, setLiked] = useState(false);
+  const progress = useProgress();
 
   useEffect(() => {
     const loadTracks = async () => {
       if (token && id) {
         try {
           const current = await getcurrentTrack(token, id);
-          const like=await fetchLiked(token,id);
-         
-          
-          setLiked(like)
+          const like = await fetchLiked(token, id);
+
+          setLiked(like);
 
           dispatch(setcurrAlbum(current?.album?.id));
-         
 
           setTrack(current);
         } catch (err) {
@@ -130,8 +129,6 @@ export default function Player({navigation}) {
           </TextCmp>
           <Pressable
             onPress={() => {
-            
-             
               setPressed(!pressed);
             }}
             style={({pressed}) => [
@@ -149,12 +146,16 @@ export default function Player({navigation}) {
           </Pressable>
         </View>
         <Slider
-          style={{marginVertical: 8}}
+          style={{marginVertical: 8, width: '100%'}}
           minimumValue={0}
-          maximumValue={180}
+          maximumValue={progress.duration}
+          value={progress.position}
           minimumTrackTintColor="#FFFFFF"
           maximumTrackTintColor="#B3B3B3"
           thumbTintColor="white"
+          onSlidingComplete={async value => {
+            await TrackPlayer.seekTo(value);
+          }}
         />
         <View style={styles.duration}>
           <TextCmp color="#b3b3b3">0:00</TextCmp>
