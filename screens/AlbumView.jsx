@@ -1,4 +1,12 @@
-import {StyleSheet, Text, View, Image, Pressable,SafeAreaView,ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
@@ -77,7 +85,10 @@ export default function AlbumView({navigation, route}) {
     },
   );
 
-  const renderItem = ({item}) => (
+  const renderItem = ({item}) =>{
+    const isCurrent = item.id === trackid;
+
+   return(
     <Pressable
       onPress={() => {
         (async () => {
@@ -85,7 +96,12 @@ export default function AlbumView({navigation, route}) {
         })();
       }}>
       <View style={styles.card}>
-        <TextCmp marginH={14} weight="medium" marginV={4} size={16}>
+        <TextCmp
+          marginH={14}
+          weight="medium"
+          marginV={4}
+          size={16}
+          color={isCurrent ? '#1ED760' : 'white'}>
           {item.name}
         </TextCmp>
         <View style={styles.track}>
@@ -107,6 +123,7 @@ export default function AlbumView({navigation, route}) {
       </View>
     </Pressable>
   );
+}
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   useEffect(() => {
@@ -123,51 +140,45 @@ export default function AlbumView({navigation, route}) {
 
     setup();
   }, []);
- useEffect(() => {
-  const loadTracks = async () => {
-    if (token && id) {
-      
-      setLoading(true);
-      setAlbum(null);
-      setTrack(null);
-      setArtist(null);
+  useEffect(() => {
+    const loadTracks = async () => {
+      if (token && id) {
+        setLoading(true);
+        setAlbum(null);
+        setTrack(null);
+        setArtist(null);
 
-      try {
-        const data = await fetchAlbumView(id, token);
-        const trackdata = await fetchAlbumTrack(id, token);
-        const artistId = data.artists[0].id;
-        const artistdata = await fetchArtist(artistId, token);
+        try {
+          const data = await fetchAlbumView(id, token);
+          const trackdata = await fetchAlbumTrack(id, token);
+          const artistId = data.artists[0].id;
+          const artistdata = await fetchArtist(artistId, token);
 
-        setAlbum(data);
-        setTrack(trackdata.items);
-        setArtist(artistdata);
-      } catch (err) {
-        console.error('Error fetching album:', err);
-      } finally {
-        setLoading(false);
+          setAlbum(data);
+          setTrack(trackdata.items);
+          setArtist(artistdata);
+        } catch (err) {
+          console.error('Error fetching album:', err);
+        } finally {
+          setLoading(false);
+        }
       }
-    }
-  };
+    };
 
-  loadTracks();
-}, [token, id]);
-
+    loadTracks();
+  }, [token, id]);
 
   if (loading) {
     return (
-      <LinearGradient colors={['#962419', '#661710', '#430E09']}
-      style={styles.linearGradient}>
-           <SafeAreaView style={styles.emptyState}>
-        <ActivityIndicator size="large" color="#1DB954" />
-      </SafeAreaView>
+      <LinearGradient
+        colors={['#962419', '#661710', '#430E09']}
+        style={styles.linearGradient}>
+        <SafeAreaView style={styles.emptyState}>
+          <ActivityIndicator size="large" color="#1DB954" />
+        </SafeAreaView>
       </LinearGradient>
-     
-
-      
-      
     );
   }
-
 
   return (
     <LinearGradient
@@ -230,7 +241,7 @@ export default function AlbumView({navigation, route}) {
                         dispatch(setPlaying(true));
                       }
                     } else {
-                      await playAlbum(album.id, token, dispatch, trackid,true);
+                      await playAlbum(album.id, token, dispatch, trackid, true);
                     }
                   } catch (error) {
                     console.error('Error handling album press:', error);
@@ -282,12 +293,7 @@ export default function AlbumView({navigation, route}) {
           showsVerticalScrollIndicator={false}
         />
       </View>
-      <View>
-      
-        {trackid &&<Play />}
-      </View>
-
-  
+      <View>{trackid && <Play />}</View>
     </LinearGradient>
   );
 }
@@ -369,13 +375,13 @@ const styles = StyleSheet.create({
   artistdesc: {
     flexDirection: 'row',
   },
-   emptyState: {
+  emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  root:{
-    flex:1,
-    backgroundColor:'#111111'
-  }
+  root: {
+    flex: 1,
+    backgroundColor: '#111111',
+  },
 });
