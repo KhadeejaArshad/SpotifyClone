@@ -10,28 +10,30 @@ import TextCmp from '../UI/SpText';
 import {setRecentsLoading} from '../store/appSlice';
 import { verticalScale,horizontalScale,moderateScale } from '../utils/fonts/fonts';
 
-export default function Recents() {
+export default function Recents({data}) {
   const navigation = useNavigation();
   const [tracks, setTracks] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useSelector(state => state.auth.token);
+  const dispatch=useDispatch();
 
-  useEffect(() => {
-    const loadTracks = async () => {
-      setLoading(true);
-      try {
-        if (token) {
-          const data = await fetchRecentlyPlayedArtists(token);
-          setTracks(data);
-        }
-      } catch (err) {
-        console.error('Error fetching recents:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadTracks();
-  }, [token]);
+  // useEffect(() => {
+  //   const loadTracks = async () => {
+  //     // setLoading(true);
+  //     try {
+  //       if (token) {
+  //         const data = await fetchRecentlyPlayedArtists(token);
+  //         setTracks(data);
+  //       }
+  //     } catch (err) {
+  //       console.error('Error fetching recents:', err);
+  //     } finally {
+  //       // setLoading(false);
+  //       dispatch(setLoading({ key: 'recents', value: true }));
+  //     }
+  //   };
+  //   loadTracks();
+  // }, [token]);
 
   const renderItem = ({ item, index }) => (
     <Pressable onPress={() => navigation.navigate('ArtistView', { id: item.id })}>
@@ -54,19 +56,19 @@ export default function Recents() {
 
   return (
     <View style={styles.screen}>
-      {loading ? (
+      {/* {loading ? (
         <View style={styles.loaderContainer}>
           <ActivityIndicator size="large" color="#1DB954" />
         </View>
-      ) : (
+      ) : ( */}
         <FlatList
-          data={tracks}
+          data={data}
           renderItem={renderItem}
           keyExtractor={item => item.id.toString()}
           horizontal
           showsHorizontalScrollIndicator={false}
         />
-      )}
+      {/* )} */}
     </View>
   );
 }

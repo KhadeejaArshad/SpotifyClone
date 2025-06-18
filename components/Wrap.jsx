@@ -2,39 +2,24 @@ import {StyleSheet, Text, View, FlatList, Image, Pressable,ActivityIndicator} fr
 import React from 'react';
 
 import {images} from '../assets/image';
-import {fonts} from '../utils/fonts';
-import {useState, useEffect} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {fetchRecentlyPlayedAlbums} from '../utils/http';
+
+import {useState} from 'react';
+import {useSelector} from 'react-redux';
+
 import {useNavigation} from '@react-navigation/native';
 import TextCmp from '../UI/SpText';
-import { setWrapLoading } from '../store/appSlice';
-import { verticalScale,horizontalScale,moderateScale } from '../utils/fonts/fonts';
+
+import { verticalScale,horizontalScale } from '../utils/fonts/fonts';
 
 
 
-export default function Wrap() {
+export default function Wrap({data}) {
   const navigation = useNavigation();
   const [album, setAlbum] = useState([]);
-  const [loading, setLoading] = useState(false);
+ 
   const token = useSelector(state => state.auth.token);
 
-  useEffect(() => {
-    const loadTracks = async () => {
-      setLoading(true);
-      try {
-        if (token) {
-          const data = await fetchRecentlyPlayedAlbums(token);
-          setAlbum(data);
-        }
-      } catch (err) {
-        console.error('Error fetching wrap albums:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadTracks();
-  }, [token]);
+
 
   const renderItem = ({ item, index }) => (
     <Pressable
@@ -67,19 +52,15 @@ export default function Wrap() {
       </View>
 
       <View style={styles.screen}>
-        {loading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color="#1DB954" />
-          </View>
-        ) : (
+      
           <FlatList
-            data={album}
+            data={data}
             renderItem={renderItem}
             keyExtractor={item => item.id.toString()}
             horizontal
             showsHorizontalScrollIndicator={false}
           />
-        )}
+      
       </View>
     </>
   );

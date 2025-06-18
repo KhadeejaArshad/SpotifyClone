@@ -7,7 +7,6 @@ import playerSlice from './track'
 const rootReducer = combineReducers({
   auth: authSlice,
   player:playerSlice,
- 
 });
 
 
