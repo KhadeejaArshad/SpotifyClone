@@ -46,7 +46,12 @@ const Search = () => {
       <SearchModal visible={modalVisible} setVisible={setModalVisible} />
 
       <List />
-      {id && <Play />}
+    
+      {id && (
+        <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+          <Play />
+        </View>
+      )}
     </View>
   );
 };
