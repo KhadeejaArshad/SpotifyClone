@@ -52,12 +52,12 @@ export default function Player({navigation}) {
         try {
           const current = await getcurrentTrack(token, id);
           const like=await fetchLiked(token,id);
-          console.log(like);
+         
           
           setLiked(like)
 
           dispatch(setcurrAlbum(current?.album?.id));
-          console.log(current?.album?.id);
+         
 
           setTrack(current);
         } catch (err) {

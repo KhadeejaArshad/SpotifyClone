@@ -1,38 +1,3 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-export const getAccessToken = async () => {
-  const clientId = '94350b08c7a845ea9739ed1471ede39a';
-  const clientSecret = '383a476a6d784e299cb4d78292718a21';
-
-  const body = new URLSearchParams({
-    grant_type: 'client_credentials',
-    client_id: clientId,
-    client_secret: clientSecret,
-  }).toString();
-
-  try {
-    const response = await fetch('https://accounts.spotify.com/api/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body,
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      console.log('Access Token:', data.access_token);
-      AsyncStorage.setItem('token', data.access_token);
-      return data.access_token;
-    } else {
-      console.error('Error getting access token:', data);
-    }
-  } catch (error) {
-    console.error('Fetch failed:', error);
-  }
-};
-
 export async function getProfile(token) {
   const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
@@ -78,7 +43,7 @@ export const fetchRecentlyPlayedAlbums = async accessToken => {
       if (!albumsMap.has(album.id)) {
         albumsMap.set(album.id, {
           id: album.id,
-          image: {uri: album.images[0]?.url},
+          image: {uri: album?.images[0]?.url},
           title: album.name,
           artist: album.artists.map(a => a.name).join(', '),
         });
@@ -139,7 +104,7 @@ export const fetchRecentlyPlayedArtists = async accessToken => {
     return artistRes.data.artists.map(artist => ({
       id: artist.id,
       name: artist.name,
-      image: {uri: artist.images?.[0]?.url},
+      image: {uri: artist?.images?.[0]?.url},
     }));
   } catch (error) {
     console.error(
@@ -160,7 +125,7 @@ export const fetchRecentlyPlayedArtists = async accessToken => {
       return fallbackRes.data.artists.map(artist => ({
         id: artist.id,
         name: artist.name,
-        image: {uri: artist.images?.[0]?.url},
+        image: {uri: artist?.images?.[0]?.url},
       }));
     } catch (fallbackError) {
       console.error(
@@ -471,7 +436,7 @@ export async function playAlbum(
 
 export async function playTrack(id, token) {
   const tracks = await getcurrentTrack(id, token);
-  console.log(tracks);
+ 
 
   
 }

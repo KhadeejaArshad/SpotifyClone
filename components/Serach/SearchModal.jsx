@@ -31,7 +31,7 @@ export default function SearchModal({visible ,setVisible}) {
       if (query.length > 2) {
         const data = await searchSpotify(query, token);
         if (data) {
-          console.log('search', data);
+        
 
           setResults(data);
         }
@@ -86,7 +86,7 @@ const AlbumCard = ({ item }) => (
    <View style={styles.card}>
     <Image
       style={styles.image}
-      source={{ uri: item.images?.[0]?.url }}
+      source={{ uri: item?.images?.[0]?.url }}
     />
     <View>
       
@@ -105,7 +105,7 @@ const PlaylistCard = ({ item }) => (
      <View style={styles.card}>
     <Image
       style={styles.image}
-      source={{ uri: item.images?.[0]?.url }}
+      source={{ uri: item?.images?.[0]?.url }}
     />
     <View>
       <TextCmp>{item.name}</TextCmp>
@@ -124,7 +124,7 @@ const ArtistCard = ({ item }) => (
     <View style={styles.card}>
     <Image
       style={[styles.image, { borderRadius: 999 }]}
-      source={{ uri: item.images?.[0]?.url }}
+      source={{ uri: item?.images?.[0]?.url }}
     />
     <View>
       <TextCmp>{item.name}</TextCmp>

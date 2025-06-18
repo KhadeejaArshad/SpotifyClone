@@ -11,7 +11,7 @@ import {
   moderateScale,
 } from '../../utils/fonts/fonts';
 export default function List({data}) {
-  console.log(data);
+ 
 
   const navigation = useNavigation();
 
@@ -29,8 +29,8 @@ export default function List({data}) {
     return (
       <Pressable onPress={onPressHandler}>
         <View style={styles.item}>
-          {item.images?.[0]?.url && (
-            <Image source={{uri: item.images[0].url}} style={styles.image} />
+          {item?.images?.[0]?.url && (
+            <Image source={{uri: item?.images[0]?.url}} style={styles.image} />
           )}
           <View style={styles.desc}>
             <TextCmp size={16} width={250} weight="Demi">

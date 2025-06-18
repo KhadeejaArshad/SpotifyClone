@@ -76,7 +76,6 @@ useEffect(() => {
       
       
 
-      console.log(profile);
       
       if (profile?.display_name) {
         setUserName(profile.display_name + "'s Library");
@@ -168,7 +167,7 @@ useEffect(() => {
         <BottomTab.Screen
         name="LikedSongs"
         component={LikedItems}
-        options={{ headerTitle:'LikedSongs', 
+        options={{headerShown: false, 
           tabBarItemStyle:{display:'none'}
         }}
       />

@@ -51,7 +51,7 @@ export default function Play() {
       async event => {
         if (event.nextTrack != null) {
           const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
-          console.log('Next Track:', nextTrack);
+          
 
           if (nextTrack) {
             dispatch(setcurTrack(nextTrack.id));
@@ -70,7 +70,7 @@ export default function Play() {
       if (token && id) {
         try {
           const current = await getcurrentTrack(token, id);
-          console.log("Play Component",current);
+          
           dispatch(setcurrAlbum(current?.album?.id));
 
           setTrack(current);

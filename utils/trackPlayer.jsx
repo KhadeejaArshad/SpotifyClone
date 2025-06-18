@@ -9,7 +9,7 @@ export async function setupPlayer() {
   let isSetup = false;
   try {
    const track = await TrackPlayer.getActiveTrack();
-   console.log(track);
+   
    
 
     isSetup = true;

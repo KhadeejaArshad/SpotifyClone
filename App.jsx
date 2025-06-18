@@ -76,7 +76,7 @@ function AppWithBootstrap() {
 
   return (
     <>
-      <NavigationContainer ref={navigationRef} onReady={() => BootSplash.hide()}>
+      <NavigationContainer onReady={() => BootSplash.hide()}>
         {loggedIn ? <AuthenticatedStack /> : <AuthStack />}
       </NavigationContainer>
     </>

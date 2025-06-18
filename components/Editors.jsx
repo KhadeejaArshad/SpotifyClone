@@ -23,31 +23,7 @@ import {setLoading} from '../store/appSlice';
 export default function Editors({data}) {
   const dispatch = useDispatch();
   const [song, setSong] = useState([]);
-  // const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
-  const token = useSelector(state => state.auth.token);
 
-  // useEffect(() => {
-  //   const loadTracks = async () => {
-  //     try {
-  //       // setLoading(true);
-  //       if (token) {
-  //         const data = await fetchTrack(token);
-  //         console.log('Editors:', data);
-
-  //         setSong(data);
-  //       }
-  //     } catch (err) {
-  //       console.error('Error fetching editor picks:', err);
-  //     } finally {
-  //       // setLoading(false);
-
-  //      dispatch(setLoading({ key: 'editors', value: true }));
-  //     }
-  //   };
-
-  //   loadTracks();
-  // }, [token]);
 
   const renderItem = ({item, index}) => (
     <Pressable
@@ -61,7 +37,7 @@ export default function Editors({data}) {
           marginRight: index === song.length - 1 ? 12 : 12,
         },
       ]}>
-      <Image style={styles.image} source={{uri: item.image}} />
+      <Image style={styles.image} source={{uri: item?.image}} />
       <View style={styles.desc}>
         <TextCmp size={12} marginV={8}>
           {item.name}
@@ -71,13 +47,7 @@ export default function Editors({data}) {
     </Pressable>
   );
 
-  // if (loading) {
-  //   return (
-  //     <View style={styles.loaderContainer}>
-  //       <ActivityIndicator size="large" color="#1DB954" />
-  //     </View>
-  //   );
-  // }
+ 
 
   return (
     <View style={styles.main}>

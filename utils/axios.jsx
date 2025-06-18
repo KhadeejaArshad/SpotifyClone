@@ -2,7 +2,7 @@ import axios from 'axios';
 import { store } from '../store/store';
 import { refreshSpotifyToken } from './refresh';
 import { logout } from '../store/authenticate';
-import { navigate } from './Navigationservice';
+
 
 const spotifyAPI = axios.create({
   baseURL: 'https://api.spotify.com/v1',
@@ -49,7 +49,7 @@ spotifyAPI.interceptors.response.use(
         
         dispatch(logout());
        
-        navigate('login');
+      
       }
     }
 

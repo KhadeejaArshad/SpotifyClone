@@ -26,7 +26,8 @@ export const images = {
   facebook:require('../assets/Images/Login/facebook.png'),
   download:require('../assets/Images/AlbumView/M.png'),
 
-  cover: require('../assets/Images/Player/main.png')
+  cover: require('../assets/Images/Player/main.png'),
+  liked:require('../assets/Images/Library/Liked.png')
 
 
 };

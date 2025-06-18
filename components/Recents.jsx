@@ -46,7 +46,7 @@ export default function Recents({data}) {
           },
         ]}
       >
-        <Image style={styles.image} source={item.image} />
+        <Image style={styles.image} source={item?.image} />
         <TextCmp weight="Demi" marginV={4} alignment="center">
           {item.name}
         </TextCmp>
@@ -56,11 +56,7 @@ export default function Recents({data}) {
 
   return (
     <View style={styles.screen}>
-      {/* {loading ? (
-        <View style={styles.loaderContainer}>
-          <ActivityIndicator size="large" color="#1DB954" />
-        </View>
-      ) : ( */}
+  
         <FlatList
           data={data}
           renderItem={renderItem}
@@ -68,7 +64,7 @@ export default function Recents({data}) {
           horizontal
           showsHorizontalScrollIndicator={false}
         />
-      {/* )} */}
+    
     </View>
   );
 }

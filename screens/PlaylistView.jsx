@@ -171,7 +171,7 @@ export default function PlaylistView({route,navigation}) {
           {playlist?.images && (
             <Image
               style={styles.images}
-              source={{uri: playlist.images[0].url}}
+              source={{uri: playlist?.images[0]?.url}}
             />
           )}
         </View>

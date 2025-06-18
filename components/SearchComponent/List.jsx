@@ -18,7 +18,7 @@ export default function List() {
   useEffect(() => {
     async function loadcategories() {
       const category = await fetchCategories(token);
-      console.log(category.categories.items);
+     
       setcategories(category.categories.items);
     }
 

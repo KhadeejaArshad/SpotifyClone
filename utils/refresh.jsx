@@ -1,9 +1,7 @@
 import {refresh} from 'react-native-app-auth';
 import {authConfig} from './auth/auth-config';
-import {isAuthenticate, setExpireTime, setRefreshToken} from '../store/authenticate';
-import { navigate } from './Navigationservice';
-;
-import { setcurTrack } from '../store/track';
+import {isAuthenticate, logout, setExpireTime, setRefreshToken} from '../store/authenticate';
+
 export const refreshSpotifyToken = () => async (dispatch, getState) => {
   const {refreshToken} = getState().auth;
 
@@ -24,12 +22,7 @@ export const refreshSpotifyToken = () => async (dispatch, getState) => {
   } catch (error) {
     console.error('Failed to refresh Spotify token:', error);
 
-  
-    dispatch(isAuthenticate(null));
-    dispatch(setExpireTime(null));
-    dispatch(setRefreshToken(null));
-    dispatch(setcurTrack(null));
-     navigate('login');
+    dispatch(logout());
     return null;
   }
 };

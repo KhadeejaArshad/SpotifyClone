@@ -38,10 +38,10 @@ export default function ArtistView({route, navigation}) {
       <Pressable
         onPress={() => navigation.navigate('AlbumView', {id: item.id})}>
         <View style={styles.card}>
-          {item.images?.[0]?.url && (
+          {item?.images?.[0]?.url && (
             <Image
               style={styles.albumImage}
-              source={{uri: item.images[0].url}}
+              source={{uri: item?.images[0]?.url}}
             />
           )}
 
@@ -76,10 +76,10 @@ export default function ArtistView({route, navigation}) {
         try {
           const data = await fetchArtist(id, token);
           const tracks = await fetchArtistTrack(id, token);
-          console.log(tracks);
+          
           setAlbums(tracks);
 
-          console.log(data);
+          
           setPlaylist(data);
         } catch (err) {
           console.error('Error fetching album:', err);

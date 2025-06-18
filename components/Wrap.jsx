@@ -32,7 +32,7 @@ export default function Wrap({data}) {
         },
       ]}
     >
-      <Image style={styles.image} source={item.image} />
+      <Image style={styles.image} source={item?.image} />
       <TextCmp weight="Demi" marginT={8} width={150}>
         {item.title}
       </TextCmp>
