@@ -149,7 +149,7 @@ export default function ArtistView({route, navigation}) {
                 </TextCmp>
               </View>
 
-              <Pressable
+              {/* <Pressable
                 onPress={() => {
                   dispatch(setPlaying(!playing));
                 }}>
@@ -158,7 +158,7 @@ export default function ArtistView({route, navigation}) {
                   color="#1ED760"
                   size={76}
                 />
-              </Pressable>
+              </Pressable> */}
             </View>
 
             <View style={styles.iconcontainer}>
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginTop: verticalScale(-30),
+    marginTop: verticalScale(-5),
   },
   albuminfo: {
     flexDirection: 'row',
