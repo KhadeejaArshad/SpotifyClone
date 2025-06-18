@@ -7,11 +7,10 @@ import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
 import {images} from '../assets/image';
 import {fonts} from '../utils/fonts';
-import Ionicons from '@react-native-vector-icons/ionicons';
+
 import {FlatList} from 'react-native-gesture-handler';
 import Play from '../components/Play';
-import {setcurTrack} from '../store/track';
-import {setPlaying} from '../store/track';
+
 import {fetchArtist, fetchArtistTrack, fetchPlaylist} from '../utils/http';
 import TextCmp from '../UI/SpText';
 import { verticalScale,horizontalScale,moderateScale } from '../utils/fonts/fonts';
@@ -149,16 +148,7 @@ export default function ArtistView({route, navigation}) {
                 </TextCmp>
               </View>
 
-              {/* <Pressable
-                onPress={() => {
-                  dispatch(setPlaying(!playing));
-                }}>
-                <Ionicons
-                  name={playing ? 'pause-circle' : 'play-circle'}
-                  color="#1ED760"
-                  size={76}
-                />
-              </Pressable> */}
+              
             </View>
 
             <View style={styles.iconcontainer}>
