@@ -10,21 +10,59 @@ import {fonts} from '../utils/fonts';
 import Ionicons from '@react-native-vector-icons/ionicons';
 import {FlatList} from 'react-native-gesture-handler';
 import Play from '../components/Play';
-import {setcurTrack} from '../store/track';
+import {setcurrAlbum, setcurTrack} from '../store/track';
 import {setPlaying} from '../store/track';
-import {fetchPlaylist} from '../utils/http';
+import {fetchPlaylist, playPlaylist} from '../utils/http';
 import TextCmp from '../UI/SpText';
 import { verticalScale,moderateScale,horizontalScale } from '../utils/fonts/fonts';
+import {useTrackPlayerEvents, Event} from 'react-native-track-player';
+import TrackPlayer from 'react-native-track-player';
+
+
 export default function PlaylistView({route,navigation}) {
 
   const [pressed, setPressed] = useState(false);
   const [playlist, setPlaylist] = useState(null);
+  const currentAlbumId=useSelector(state=>state.player.currentAlbum);
+  const trackid=useSelector(state=>state.player.currentTrack)
 
 
   const dispatch = useDispatch();
   const id = route.params.id;
   const token = useSelector(state => state.auth.token);
   const playing = useSelector(state => state.player.isPlaying);
+
+    useTrackPlayerEvents(
+      [Event.PlaybackState, Event.PlaybackTrackChanged],
+      async event => {
+        if (event.type === Event.PlaybackState) {
+          if (event.state === State.Playing) {
+            dispatch(setPlaying(true));
+          } else if (
+            event.state === State.Paused ||
+            event.state === State.Stopped ||
+            event.state === State.Ready
+          ) {
+            dispatch(setPlaying(false));
+          }
+        }
+        useTrackPlayerEvents([Event.PlaybackQueueEnded], event => {
+          if (!event.track || event.position > 0) {
+            dispatch(setPlaying(false));
+          }
+        });
+  
+        if (
+          event.type === Event.PlaybackTrackChanged &&
+          event.nextTrack != null
+        ) {
+          const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
+          if (nextTrack) {
+            dispatch(setcurTrack(nextTrack.id));
+          }
+        }
+      },
+    );
 
 
   const renderItem = ({item}) => {
@@ -33,7 +71,12 @@ export default function PlaylistView({route,navigation}) {
     if (!track) return null; 
 
     return (
-      <Pressable onPress={() => dispatch(setcurTrack(track.id))}>
+       <Pressable
+            onPress={() => {
+              (async () => {
+                await playPlaylist(id, token, dispatch, true, item.id);
+              })();
+            }}>
         <View style={styles.card}>
           <TextCmp marginH={14} size={16} weight='medium' marginV={4}  >{track.name}</TextCmp>
 
@@ -58,13 +101,29 @@ export default function PlaylistView({route,navigation}) {
   };
 
   useEffect(() => {
+    async function setup() {
+      let isSetup = await setupPlayer();
+
+      const queue = await TrackPlayer.getQueue();
+      if (isSetup && queue.length <= 0) {
+        await addTracks();
+      }
+
+      setIsPlayerReady(isSetup);
+    }
+
+    setup();
+  }, []);
+  useEffect(() => {
     const loadTracks = async () => {
       if (token) {
         try {
           const data = await fetchPlaylist(id, token);
 
-          console.log(data);
+          console.log("PLAYLISTDATA,",data);
           setPlaylist(data);
+          
+
         } catch (err) {
           console.error('Error fetching album:', err);
         }
@@ -115,11 +174,29 @@ export default function PlaylistView({route,navigation}) {
               </View>
 
               <Pressable
-                onPress={() => {
-                  dispatch(setPlaying(!playing));
+                onPress={async () => {
+                  try {
+                    if (currentAlbumId === playlist.id) {
+                      if (playing) {
+                        await TrackPlayer.pause();
+                        dispatch(setPlaying(false));
+                      } else {
+                        await TrackPlayer.play();
+                        dispatch(setPlaying(true));
+                      }
+                    } else {
+                      await playPlaylist(playlist.id, token, dispatch, trackid,true);
+                    }
+                  } catch (error) {
+                    console.error('Error handling album press:', error);
+                  }
                 }}>
                 <Ionicons
-                  name={playing ? 'pause-circle' : 'play-circle'}
+                  name={
+                    playing && currentAlbumId === playlist.id
+                      ? 'pause-circle'
+                      : 'play-circle'
+                  }
                   color="#1ED760"
                   size={76}
                 />
@@ -160,7 +237,7 @@ export default function PlaylistView({route,navigation}) {
         />
       </View>
 
-      <Play />
+      {trackid &&<Play />}
     </LinearGradient>
   );
 }

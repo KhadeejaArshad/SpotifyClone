@@ -531,3 +531,49 @@ export async function fetchSavedSongs(accesstoken) {
     );
   }
 }
+
+
+export async function playPlaylist(
+  playlistId,
+  token,
+  dispatch,
+  selectedTrackId = null,
+  shouldDispatch = true
+) {
+  await TrackPlayer.reset();
+
+  const tracks = await fetchPlaylist(playlistId, token); 
+  const items=tracks.tracks.items;
+  
+
+  const formattedTracks = items.map((item, index) => {
+    const track = item.track;
+    return {
+      id: track.id || `track-${index}`,
+      url: 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
+      title: track.name,
+      artist: track.artists?.[0]?.name || 'Unknown',
+      duration: 30,
+    };
+  });
+
+  await addTracks(formattedTracks);
+
+  let startIndex = 0;
+  if (selectedTrackId) {
+    const index = formattedTracks.findIndex(t => t.id === selectedTrackId);
+    if (index !== -1) {
+      startIndex = index;
+      await TrackPlayer.skip(formattedTracks[startIndex].id);
+    }
+  }
+
+  await TrackPlayer.play();
+
+  if (shouldDispatch) {
+    dispatch(setTrackList(formattedTracks));
+    dispatch(setcurrAlbum(playlistId)); 
+    dispatch(setcurTrack(formattedTracks[startIndex].id));
+    dispatch(setPlaying(true));
+  }
+}
