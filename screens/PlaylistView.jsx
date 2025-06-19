@@ -77,6 +77,7 @@ export default function PlaylistView({route, navigation}) {
 
   const renderItem = ({item}) => {
     const track = item.track;
+    const isCurrent = track.id === trackid;
     
 
     if (!track) return null;
@@ -89,9 +90,14 @@ export default function PlaylistView({route, navigation}) {
           })();
         }}>
         <View style={styles.card}>
-          <TextCmp marginH={14} size={16} weight="medium" marginV={4}>
-            {track.name}
-          </TextCmp>
+           <TextCmp
+          marginH={14}
+          weight="medium"
+          marginV={4}
+          size={16}
+          color={isCurrent ? '#1ED760' : 'white'}>
+          {track.name}
+        </TextCmp>
 
           <View style={styles.track}>
             <View style={styles.trackdesc}>
