@@ -74,7 +74,7 @@ export default function AlbumView({navigation, route}) {
       });
 
       if (
-        event.type === Event.PlaybackActiveTrackChanged &&
+        event.type === Event.PlaybackTrackChanged &&
         event.nextTrack != null
       ) {
         const nextTrack = await TrackPlayer.getTrack(event.nextTrack);

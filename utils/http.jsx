@@ -391,6 +391,7 @@ import {
   setcurrAlbum,
   setPlaying,
   setcurTrack,
+  setcurrPlaylist,
 } from '../store/track';
 
 export async function playAlbum(
@@ -441,12 +442,7 @@ export async function playAlbum(
   }
 }
 
-export async function playTrack(id, token) {
-  const tracks = await getcurrentTrack(id, token);
- 
 
-  
-}
 export async function fetchCategories(accesstoken) {
   try {
     const res = await spotifyAPI.get(`/browse/categories`, {
@@ -504,7 +500,6 @@ export async function fetchSavedSongs(accesstoken) {
   }
 }
 
-
 export async function playPlaylist(
   playlistId,
   token,
@@ -515,31 +510,28 @@ export async function playPlaylist(
   await TrackPlayer.reset();
 
   const tracks = await fetchPlaylist(playlistId, token);
-  console.log(tracks);
-   
-  const items=tracks.tracks.items;
+  const items = tracks.tracks.items;
+  console.log(items);
   
 
-  const formattedTracks = items
-  .map((item, index) => {
+  const formattedTracks = items.map((item, index) => {
     const track = item.track;
-
-    if (!track || !track.id || !track.name || !track.artists?.length) return null;
-
     return {
       id: track.id || `track-${index}`,
-      url: track.preview_url || 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
+      url: 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
       title: track.name,
-      artist: track.artists[0]?.name || 'Unknown',
-      artwork: track.album?.images?.[0]?.url || '',
-      duration: typeof track.duration_ms === 'number'
-        ? Math.floor(track.duration_ms / 1000)
-        : 30, 
+      artist: track.artists?.[0]?.name || 'Unknown',
+      duration: 30,
+      artwork: track.album?.images?.[0]?.url || undefined, 
     };
-  })
-  .filter(Boolean);
+  });
 
+  try {
   await addTracks(formattedTracks);
+} catch (err) {
+  console.error('TrackPlayer addTracks error:', err);
+}
+
 
   let startIndex = 0;
   if (selectedTrackId) {
@@ -554,11 +546,14 @@ export async function playPlaylist(
 
   if (shouldDispatch) {
     dispatch(setTrackList(formattedTracks));
-    dispatch(setcurrAlbum(playlistId)); 
+    dispatch(setcurrPlaylist(playlistId));
+    console.log("id going",playlistId);
+    
     dispatch(setcurTrack(formattedTracks[startIndex].id));
     dispatch(setPlaying(true));
   }
 }
+
 export async function LikeTrack(id, accesstoken) {
   try {
     const res = await spotifyAPI.put(`/me/tracks?ids=${id}`, {

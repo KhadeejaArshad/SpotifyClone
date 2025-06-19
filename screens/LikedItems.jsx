@@ -9,6 +9,7 @@ import { moderateScale,horizontalScale,verticalScale } from '../utils/fonts/font
 import LinearGradient from 'react-native-linear-gradient';
 import Play from '../components/Play';
 import { setcurTrack } from '../store/track';
+import Ionicons from '@react-native-vector-icons/ionicons';
 
 
 export default function LikedItems({navigation}) {
@@ -95,9 +96,26 @@ const renderItem = ({ item }) =>{
 
         
           <>
+          <View style={{flexDirection:'row', justifyContent:'space-between', marginVertical:8,
+            marginBottom:-20
+          }}>
             <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
               LikedSongs
             </TextCmp>
+                <Pressable>
+                <Ionicons
+                  name=
+                    
+                       'pause-circle'
+              
+                  
+                  color="#1ED760"
+                  size={76}
+                />
+              </Pressable>
+
+          </View>
+          
             {/* <View style={styles.something}>
               <View>
                 <View style={styles.artistdesc}>
@@ -121,34 +139,7 @@ const renderItem = ({ item }) =>{
                 </View>
               </View> */}
 
-              {/* <Pressable
-                onPress={async () => {
-                  try {
-                    if (currentAlbumId === album.id) {
-                      if (playing) {
-                        await TrackPlayer.pause();
-                        dispatch(setPlaying(false));
-                      } else {
-                        await TrackPlayer.play();
-                        dispatch(setPlaying(true));
-                      }
-                    } else {
-                      await playAlbum(album.id, token, dispatch, trackid, true);
-                    }
-                  } catch (error) {
-                    console.error('Error handling album press:', error);
-                  }
-                }}>
-                <Ionicons
-                  name={
-                    playing && currentAlbumId === album.id
-                      ? 'pause-circle'
-                      : 'play-circle'
-                  }
-                  color="#1ED760"
-                  size={76}
-                />
-              </Pressable> */}
+          
             {/* </View> */}
 
             <View style={styles.iconcontainer}>

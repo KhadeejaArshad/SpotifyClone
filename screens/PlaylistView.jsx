@@ -1,4 +1,12 @@
-import {StyleSheet, Text, View, Image, Pressable,SafeAreaView,ActivityIndicator} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  Pressable,
+  SafeAreaView,
+  ActivityIndicator,
+} from 'react-native';
 import React, {useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import AntDesign from '@react-native-vector-icons/ant-design';
@@ -14,76 +22,83 @@ import {setcurrAlbum, setcurTrack} from '../store/track';
 import {setPlaying} from '../store/track';
 import {fetchPlaylist, playPlaylist} from '../utils/http';
 import TextCmp from '../UI/SpText';
-import { verticalScale,moderateScale,horizontalScale } from '../utils/fonts/fonts';
+import {
+  verticalScale,
+  moderateScale,
+  horizontalScale,
+} from '../utils/fonts/fonts';
 import {useTrackPlayerEvents, Event} from 'react-native-track-player';
 import TrackPlayer from 'react-native-track-player';
 
-
-export default function PlaylistView({route,navigation}) {
-
+export default function PlaylistView({route, navigation}) {
   const [pressed, setPressed] = useState(false);
   const [playlist, setPlaylist] = useState(null);
-  const currentAlbumId=useSelector(state=>state.player.currentAlbum);
-  const trackid=useSelector(state=>state.player.currentTrack)
-  const [loading,setLoading]= useState(true);
+  const currentAlbumId = useSelector(state => state.player.currentPlaylist);
+
+  const trackid = useSelector(state => state.player.currentTrack);
+  const [loading, setLoading] = useState(true);
 
   const dispatch = useDispatch();
   const id = route.params.id;
+ ;
+
   const token = useSelector(state => state.auth.token);
   const playing = useSelector(state => state.player.isPlaying);
-
-    useTrackPlayerEvents(
-      [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
-      async event => {
-        if (event.type === Event.PlaybackState) {
-          if (event.state === State.Playing) {
-            dispatch(setPlaying(true));
-          } else if (
-            event.state === State.Paused ||
-            event.state === State.Stopped ||
-            event.state === State.Ready
-          ) {
-            dispatch(setPlaying(false));
-          }
-        }
-        useTrackPlayerEvents([Event.PlaybackQueueEnded], event => {
-          if (!event.track || event.position > 0) {
-            dispatch(setPlaying(false));
-          }
-        });
-  
-        if (
-          event.type === Event.PlaybackActiveTrackChanged &&
-          event.nextTrack != null
+  useTrackPlayerEvents(
+    [Event.PlaybackState, Event.PlaybackTrackChanged, Event.PlaybackQueueEnded],
+    async event => {
+      if (event.type === Event.PlaybackState) {
+        if (event.state === State.Playing) {
+          dispatch(setPlaying(true));
+        } else if (
+          event.state === State.Paused ||
+          event.state === State.Stopped ||
+          event.state === State.Ready
         ) {
-          const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
-          if (nextTrack) {
-            dispatch(setcurTrack(nextTrack.id));
-          }
+          dispatch(setPlaying(false));
         }
-      },
-    );
+      }
 
+      if (
+        event.type === Event.PlaybackTrackChanged &&
+        event.nextTrack != null
+      ) {
+        const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
+        if (nextTrack) {
+          dispatch(setcurTrack(nextTrack.id));
+        }
+      }
+
+      if (event.type === Event.PlaybackQueueEnded) {
+        dispatch(setPlaying(false));
+      }
+    },
+  );
 
   const renderItem = ({item}) => {
     const track = item.track;
+    
 
-    if (!track) return null; 
+    if (!track) return null;
 
     return (
-       <Pressable
-            onPress={() => {
-              (async () => {
-                await playPlaylist(id, token, dispatch, true, item.id);
-              })();
-            }}>
+      <Pressable
+        onPress={() => {
+          (async () => {
+            await playPlaylist(playlist.id, token, dispatch, track.id, true);
+          })();
+        }}>
         <View style={styles.card}>
-          <TextCmp marginH={14} size={16} weight='medium' marginV={4}  >{track.name}</TextCmp>
+          <TextCmp marginH={14} size={16} weight="medium" marginV={4}>
+            {track.name}
+          </TextCmp>
 
           <View style={styles.track}>
             <View style={styles.trackdesc}>
               <Image style={styles.dicon} source={images.download} />
-              <TextCmp marginV={4} color='#b3B3B3'>{track.artists[0]?.name}</TextCmp>
+              <TextCmp marginV={4} color="#b3B3B3">
+                {track.artists[0]?.name}
+              </TextCmp>
             </View>
 
             <View>
@@ -117,41 +132,34 @@ export default function PlaylistView({route,navigation}) {
   useEffect(() => {
     const loadTracks = async () => {
       if (token) {
-      
-      
-      setLoading(true);
-      setPlaylist(null)
+        setLoading(true);
+        setPlaylist(null);
         try {
           const data = await fetchPlaylist(id, token);
+          console.log('PLAYLIST', data);
 
-        
           setPlaylist(data);
-          
-
         } catch (err) {
           console.error('Error fetching album:', err);
-        }finally{
-          setLoading(false)
+        } finally {
+          setLoading(false);
         }
       }
     };
     loadTracks();
   }, [token, id]);
 
-    if (loading) {
-      return (
-        <LinearGradient colors={['#962419', '#661710', '#430E09']}
+  if (loading) {
+    return (
+      <LinearGradient
+        colors={['#962419', '#661710', '#430E09']}
         style={styles.linearGradient}>
-             <SafeAreaView style={styles.emptyState}>
+        <SafeAreaView style={styles.emptyState}>
           <ActivityIndicator size="large" color="#1DB954" />
         </SafeAreaView>
-        </LinearGradient>
-       
-  
-        
-        
-      );
-    }
+      </LinearGradient>
+    );
+  }
   return (
     <LinearGradient
       colors={['#962419', '#661710', '#430E09']}
@@ -178,18 +186,18 @@ export default function PlaylistView({route,navigation}) {
 
         {playlist && (
           <>
-            <TextCmp weight='Demi' size={25} marginH={8} marginV={8}>{playlist.name}</TextCmp>
+            <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
+              {playlist.name}
+            </TextCmp>
             <View style={styles.something}>
               <View>
                 <View style={styles.artistdesc}>
-                
-                  <TextCmp marginH={8} marginV={6} weight='Demi'>
+                  <TextCmp marginH={8} marginV={6} weight="Demi">
                     {playlist.owner.display_name}
                   </TextCmp>
                 </View>
                 <View style={styles.albumdesc}>
                   <TextCmp>{playlist.type}</TextCmp>
-                 
                 </View>
               </View>
 
@@ -205,7 +213,13 @@ export default function PlaylistView({route,navigation}) {
                         dispatch(setPlaying(true));
                       }
                     } else {
-                      await playPlaylist(playlist.id, token, dispatch, trackid,true);
+                      await playPlaylist(
+                        playlist.id,
+                        token,
+                        dispatch,
+                        trackid,
+                        true,
+                      );
                     }
                   } catch (error) {
                     console.error('Error handling album press:', error);
@@ -257,7 +271,7 @@ export default function PlaylistView({route,navigation}) {
         />
       </View>
 
-      {trackid &&<Play />}
+      {trackid && <Play />}
     </LinearGradient>
   );
 }
@@ -354,7 +368,7 @@ const styles = StyleSheet.create({
   artistdesc: {
     flexDirection: 'row',
   },
-   emptyState: {
+  emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

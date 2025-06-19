@@ -5,7 +5,7 @@ const initialState = {
   isPlaying: false,
   trackList: [],
   currentAlbum: null,
-  curOpenAlbum: null,
+  currentPlaylist: null,
   likesVersion: 0,
 
 };
@@ -26,8 +26,8 @@ const playerSlice = createSlice({
     setcurrAlbum: (state, action) => {
       state.currentAlbum = action.payload;
     },
-    setOpenAlbum: (state, action) => {
-      state.curOpenAlbum = action.payload;
+    setcurrPlaylist: (state, action) => {
+      state.currentPlaylist = action.payload;
     },
     resetPlayer: () => initialState,
   },
@@ -43,7 +43,7 @@ export const {
   setPlaying,
   setTrackList,
   setcurrAlbum,
-  setOpenAlbum,
+  setcurrPlaylist,
   resetPlayer,
   incrementLikesVersion
 
