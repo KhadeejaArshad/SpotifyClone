@@ -2,12 +2,11 @@ export async function getProfile(token) {
   const response = await fetch('https://api.spotify.com/v1/me', {
     headers: {
       Authorization: `Bearer ${token}`,
-
     },
   });
 
   const data = await response.json();
-  return data
+  return data;
 }
 
 import spotifyAPI from './axios';
@@ -392,6 +391,7 @@ import {
   setPlaying,
   setcurTrack,
   setcurrPlaylist,
+  setSource,
 } from '../store/track';
 
 export async function playAlbum(
@@ -404,11 +404,7 @@ export async function playAlbum(
   await TrackPlayer.reset();
 
   const tracks = await fetchAlbumTrack(albumId, token);
-  const album=await fetchAlbumView(albumId,token);
-
-  
- 
-  
+  const album = await fetchAlbumView(albumId, token);
 
   const formattedTracks = tracks.items.map((track, index) => ({
     id: track.id || `track-${index}`,
@@ -416,8 +412,7 @@ export async function playAlbum(
     title: track.name,
     artist: track.artists?.[0]?.name || 'Unknown',
     duration: 30,
-    artwork:album?.images[0].url
-   
+    artwork: album?.images[0].url,
   }));
 
   await addTracks(formattedTracks);
@@ -437,11 +432,11 @@ export async function playAlbum(
   if (shouldDispatch) {
     dispatch(setTrackList(formattedTracks));
     dispatch(setcurrAlbum(albumId));
+    dispatch(setSource(null));
     dispatch(setcurTrack(formattedTracks[startIndex].id));
     dispatch(setPlaying(true));
   }
 }
-
 
 export async function fetchCategories(accesstoken) {
   try {
@@ -449,9 +444,9 @@ export async function fetchCategories(accesstoken) {
       headers: {
         Authorization: `Bearer ${accesstoken}`,
       },
-       params: {
+      params: {
         locale: 'en_US',
-        limit: 16
+        limit: 16,
       },
     });
 
@@ -484,10 +479,10 @@ export async function fetchSavedSongs(accesstoken) {
       headers: {
         Authorization: `Bearer ${accesstoken}`,
       },
-       params: {
+      params: {
         market: 'ES',
         limit: 10,
-        offsett:5
+        offsett: 5,
       },
     });
 
@@ -505,14 +500,13 @@ export async function playPlaylist(
   token,
   dispatch,
   selectedTrackId = null,
-  shouldDispatch = true
+  shouldDispatch = true,
 ) {
   await TrackPlayer.reset();
 
   const tracks = await fetchPlaylist(playlistId, token);
   const items = tracks.tracks.items;
   console.log(items);
-  
 
   const formattedTracks = items.map((item, index) => {
     const track = item.track;
@@ -522,16 +516,15 @@ export async function playPlaylist(
       title: track.name,
       artist: track.artists?.[0]?.name || 'Unknown',
       duration: 30,
-      artwork: track.album?.images?.[0]?.url || undefined, 
+      artwork: track.album?.images?.[0]?.url || undefined,
     };
   });
 
   try {
-  await addTracks(formattedTracks);
-} catch (err) {
-  console.error('TrackPlayer addTracks error:', err);
-}
-
+    await addTracks(formattedTracks);
+  } catch (err) {
+    console.error('TrackPlayer addTracks error:', err);
+  }
 
   let startIndex = 0;
   if (selectedTrackId) {
@@ -547,8 +540,8 @@ export async function playPlaylist(
   if (shouldDispatch) {
     dispatch(setTrackList(formattedTracks));
     dispatch(setcurrPlaylist(playlistId));
-    console.log("id going",playlistId);
-    
+    dispatch(setSource(null));
+
     dispatch(setcurTrack(formattedTracks[startIndex].id));
     dispatch(setPlaying(true));
   }
@@ -588,5 +581,36 @@ export async function unLikeTrack(id, accesstoken) {
   }
 }
 
+export async function playLiked(token, dispatch, shouldDispatch = true) {
+  try {
+    // Step 1: Fetch saved songs
+    const songs = await fetchSavedSongs(token);
+    const formattedTracks = songs.items.map((item, index) => {
+      const track = item.track;
+      return {
+        id: track.id || `track-${index}`,
+        url: 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4', 
+        title: track.name,
+        artist: track.artists?.[0]?.name || 'Unknown',
+        duration: 30,
+        artwork: track.album?.images?.[0]?.url,
+      };
+    });
 
+   
+    await TrackPlayer.reset();
+    await TrackPlayer.add(formattedTracks);
+    await TrackPlayer.play();
 
+    
+    if (shouldDispatch) {
+      dispatch(setTrackList(formattedTracks));
+      dispatch(setcurrPlaylist('likedsong123'));
+      dispatch(setSource('liked'));
+      dispatch(setcurTrack(formattedTracks[0].id));
+      dispatch(setPlaying(true));
+    }
+  } catch (error) {
+    console.error('Error in playLiked:', error);
+  }
+}

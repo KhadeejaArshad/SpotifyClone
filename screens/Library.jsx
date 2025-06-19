@@ -1,7 +1,7 @@
 import {StyleSheet, View, Text, FlatList,ActivityIndicator} from 'react-native';
 import React, {useState, useEffect} from 'react';
 import {useSelector} from 'react-redux';
-import {fetchMyAlbum, fetchMyArtist, fetchMyPlayist} from '../utils/http';
+import {fetchMyAlbum, fetchMyArtist, fetchMyPlayist,fetchSavedSongs} from '../utils/http';
 import LibButton from '../components/Library/Button';
 import Play from '../components/Play';
 import List from '../components/Library/List';
@@ -14,6 +14,7 @@ const Library = () => {
   const [filteredItems, setFilteredItems] = useState([]);
   const [activeFilter, setActiveFilter] = useState(null);
   const id = useSelector(state => state.player.currentTrack);
+    const [song, setSongs] = useState([]);
 
   useEffect(() => {
     const loadLibrary = async () => {
@@ -22,6 +23,10 @@ const Library = () => {
           const playlists = await fetchMyPlayist(token);
           const albums = await fetchMyAlbum(token);
           const artist=await fetchMyArtist(token);
+            const songs = await fetchSavedSongs(token);
+          
+          const extractedTracks = songs.items.map(item => item.track);
+           setSongs(extractedTracks);
          
           
 
@@ -86,7 +91,7 @@ const Library = () => {
       </View>
 
       {filteredItems.length > 0 ? (
-       <List data={filteredItems}/>
+       <List length={song.length} liked={song}data={filteredItems}/>
       ) : (
         <View style={styles.emptyState}>
         <View style={styles.loaderContainer}>

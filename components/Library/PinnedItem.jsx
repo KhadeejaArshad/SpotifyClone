@@ -6,10 +6,12 @@ import TextCmp from '../../UI/SpText';
 import { verticalScale,moderateScale,horizontalScale } from '../../utils/fonts/fonts';
 import { useNavigation } from '@react-navigation/native';
 
-export default function PinnedItem({image,text,subtext}) {
+export default function PinnedItem({data,image,text,subtext}) {
   const navigation=useNavigation();
   return (
-    <Pressable style={styles.main} onPress={()=>{navigation.navigate('LikedSongs')}}>
+    <Pressable style={styles.main} onPress={()=>{navigation.navigate('LikedSongs',{
+      song:data
+    })}}>
       <Image source={image} />
 
       <View style={styles.text}>

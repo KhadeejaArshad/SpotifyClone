@@ -10,7 +10,8 @@ import {
   horizontalScale,
   moderateScale,
 } from '../../utils/fonts/fonts';
-export default function List({data}) {
+export default function List({data,length,liked}) {
+
  
 
   const navigation = useNavigation();
@@ -57,11 +58,13 @@ export default function List({data}) {
         <>
           <UpperTab />
           <PinnedItem
+            data={liked}
             image={images.pin1}
             text={'Liked Songs'}
-            subtext={'Playlist.58 songs'}
+            subtext={`Playlist.${length} songs`}
           />
           <PinnedItem
+          data={liked}
             image={images.pin2}
             text={'New Episodes'}
             subtext={'Updated 2 days ago '}
