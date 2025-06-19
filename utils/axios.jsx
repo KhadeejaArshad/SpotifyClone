@@ -2,6 +2,7 @@ import axios from 'axios';
 import { store } from '../store/store';
 import { refreshSpotifyToken } from './refresh';
 import { logout } from '../store/authenticate';
+import { setcurTrack } from '../store/track';
 
 
 const spotifyAPI = axios.create({
@@ -48,6 +49,7 @@ spotifyAPI.interceptors.response.use(
       } else {
         
         dispatch(logout());
+        dispatch(setcurTrack(null))
        
       
       }
