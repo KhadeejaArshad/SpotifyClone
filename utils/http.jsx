@@ -404,7 +404,7 @@ export async function playAlbum(
 
   const tracks = await fetchAlbumTrack(albumId, token);
   const album=await fetchAlbumView(albumId,token);
-  console.log("ghjgfhjr",album);
+
   
  
   
@@ -514,20 +514,30 @@ export async function playPlaylist(
 ) {
   await TrackPlayer.reset();
 
-  const tracks = await fetchPlaylist(playlistId, token); 
+  const tracks = await fetchPlaylist(playlistId, token);
+  console.log(tracks);
+   
   const items=tracks.tracks.items;
   
 
-  const formattedTracks = items.map((item, index) => {
+  const formattedTracks = items
+  .map((item, index) => {
     const track = item.track;
+
+    if (!track || !track.id || !track.name || !track.artists?.length) return null;
+
     return {
       id: track.id || `track-${index}`,
-      url: 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
+      url: track.preview_url || 'https://p.scdn.co/mp3-preview/e2e03acfd38d7cfa2baa924e0e9c7a80f9b49137?cid=8897482848704f2a8f8d7c79726a70d4',
       title: track.name,
-      artist: track.artists?.[0]?.name || 'Unknown',
-      duration: 30,
+      artist: track.artists[0]?.name || 'Unknown',
+      artwork: track.album?.images?.[0]?.url || '',
+      duration: typeof track.duration_ms === 'number'
+        ? Math.floor(track.duration_ms / 1000)
+        : 30, 
     };
-  });
+  })
+  .filter(Boolean);
 
   await addTracks(formattedTracks);
 

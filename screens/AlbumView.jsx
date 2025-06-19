@@ -54,7 +54,7 @@ export default function AlbumView({navigation, route}) {
     return newDate.getFullYear();
   }
   useTrackPlayerEvents(
-    [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
+    [Event.PlaybackState, Event.PlaybackTrackChanged],
     async event => {
       if (event.type === Event.PlaybackState) {
         if (event.state === State.Playing) {
