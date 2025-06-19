@@ -403,6 +403,11 @@ export async function playAlbum(
   await TrackPlayer.reset();
 
   const tracks = await fetchAlbumTrack(albumId, token);
+  const album=await fetchAlbumView(albumId,token);
+  console.log("ghjgfhjr",album);
+  
+ 
+  
 
   const formattedTracks = tracks.items.map((track, index) => ({
     id: track.id || `track-${index}`,
@@ -410,6 +415,8 @@ export async function playAlbum(
     title: track.name,
     artist: track.artists?.[0]?.name || 'Unknown',
     duration: 30,
+    artwork:album?.images[0].url
+   
   }));
 
   await addTracks(formattedTracks);
@@ -542,3 +549,39 @@ export async function playPlaylist(
     dispatch(setPlaying(true));
   }
 }
+export async function LikeTrack(id, accesstoken) {
+  try {
+    const res = await spotifyAPI.put(`/me/tracks?ids=${id}`, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+
+    return true;
+  } catch (error) {
+    console.error(
+      'Failed to fetch album details:',
+      error.response?.data || error.message,
+    );
+  }
+}
+
+export async function unLikeTrack(id, accesstoken) {
+  try {
+    const res = await spotifyAPI.delete(`/me/tracks?ids=${id}`, {
+      headers: {
+        Authorization: `Bearer ${accesstoken}`,
+      },
+    });
+
+    return false;
+  } catch (error) {
+    console.error(
+      'Failed to fetch album details:',
+      error.response?.data || error.message,
+    );
+  }
+}
+
+
+

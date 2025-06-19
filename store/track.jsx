@@ -6,6 +6,7 @@ const initialState = {
   trackList: [],
   currentAlbum: null,
   curOpenAlbum: null,
+  likesVersion: 0,
 
 };
 
@@ -30,6 +31,9 @@ const playerSlice = createSlice({
     },
     resetPlayer: () => initialState,
   },
+  incrementLikesVersion: state => {
+      state.likesVersion += 1;
+    },
    
   },
 );
@@ -41,6 +45,7 @@ export const {
   setcurrAlbum,
   setOpenAlbum,
   resetPlayer,
+  incrementLikesVersion
 
 } = playerSlice.actions;
 

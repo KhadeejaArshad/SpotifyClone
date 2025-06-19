@@ -15,7 +15,8 @@ export default function LikedItems({navigation}) {
   const token = useSelector(state => state.auth.token);
   const trackid=useSelector(state=>state.player.currentTrack);
   const dispatch=useDispatch();
-  const [song,setSongs]=useState([])
+  const [song,setSongs]=useState([]);
+  const likesVersion = useSelector(state => state.player.likesVersion);
    useEffect(() => {
      const loadTracks = async () => {
        if (token) {
@@ -35,7 +36,7 @@ export default function LikedItems({navigation}) {
        }
      };
      loadTracks();
-   }, [token]);
+   }, [token,likesVersion]);
 
 const renderItem = ({ item }) =>{
   return (
@@ -73,7 +74,7 @@ const renderItem = ({ item }) =>{
   
   return (
     <LinearGradient
-      colors={['#962419', '#661710', '#430E09']}
+      colors={['#353150', '#4d519b', '#4f6368']}
       style={styles.linearGradient}>
       <View style={styles.header}>
         <AntDesign

@@ -17,23 +17,6 @@ export default function Recents({data}) {
   const token = useSelector(state => state.auth.token);
   const dispatch=useDispatch();
 
-  // useEffect(() => {
-  //   const loadTracks = async () => {
-  //     // setLoading(true);
-  //     try {
-  //       if (token) {
-  //         const data = await fetchRecentlyPlayedArtists(token);
-  //         setTracks(data);
-  //       }
-  //     } catch (err) {
-  //       console.error('Error fetching recents:', err);
-  //     } finally {
-  //       // setLoading(false);
-  //       dispatch(setLoading({ key: 'recents', value: true }));
-  //     }
-  //   };
-  //   loadTracks();
-  // }, [token]);
 
   const renderItem = ({ item, index }) => (
     <Pressable onPress={() => navigation.navigate('ArtistView', { id: item.id })}>

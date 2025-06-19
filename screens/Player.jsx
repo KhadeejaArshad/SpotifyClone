@@ -16,7 +16,7 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import {fonts} from '../utils/fonts';
 import {playPreviewUrl} from '../utils/play';
 import {useDispatch, useSelector} from 'react-redux';
-import {setPlaying, setcurTrack} from '../store/track';
+import {incrementLikesVersion, setPlaying, setcurTrack} from '../store/track';
 import {useTrackPlayerEvents, State, Event} from 'react-native-track-player';
 import TrackPlayer, {usePlaybackState} from 'react-native-track-player';
 import {setupPlayer} from '../utils/trackPlayer';
@@ -26,7 +26,13 @@ import {
   moderateScale,
   horizontalScale,
 } from '../utils/fonts/fonts';
-import {fetchLiked, getcurrentTrack} from '../utils/http';
+import {
+  fetchLiked,
+  fetchSavedSongs,
+  getcurrentTrack,
+  LikeTrack,
+  unLikeTrack,
+} from '../utils/http';
 import {setcurrAlbum} from '../store/track';
 import {useProgress} from 'react-native-track-player';
 
@@ -128,8 +134,31 @@ export default function Player({navigation}) {
             {track?.artists?.[0]?.name || 'Unknown Artist'}
           </TextCmp>
           <Pressable
-            onPress={() => {
-              setPressed(!pressed);
+            onPress={async () => {
+              try {
+                if (!liked) {
+                  const success = await LikeTrack(id, token);
+                  if (success) {
+                    setLiked(true);
+                    dispatch(incrementLikesVersion())
+                  }
+                } else {
+                  const success = await unLikeTrack(id, token);
+                  if (success) {
+                    setLiked(false);
+                    dispatch(incrementLikesVersion())
+                    
+                  }
+                }
+
+                const current = await getcurrentTrack(token, id);
+                const like = await fetchLiked(token, id);
+                setLiked(like);
+                setTrack(current);
+                dispatch(setcurrAlbum(current?.album?.id));
+              } catch (error) {
+                console.log('Failed to toggle like/unlike:', error);
+              }
             }}
             style={({pressed}) => [
               styles.pressable,

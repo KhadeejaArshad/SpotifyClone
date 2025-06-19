@@ -47,7 +47,7 @@ export default function Play() {
 
   useEffect(() => {
     const listener = TrackPlayer.addEventListener(
-      Event.PlaybackTrackChanged,
+      Event.PlaybackActiveTrackChanged,
       async event => {
         if (event.nextTrack != null) {
           const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
