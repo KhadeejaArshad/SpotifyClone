@@ -10,6 +10,7 @@ import {
   horizontalScale,
   moderateScale,
 } from '../../utils/fonts/fonts';
+
 export default function List({data,length,liked}) {
 
  

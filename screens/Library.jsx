@@ -6,6 +6,8 @@ import LibButton from '../components/Library/Button';
 import Play from '../components/Play';
 import List from '../components/Library/List';
 import { horizontalScale,verticalScale,moderateScale } from '../utils/fonts/fonts';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
 
 
 const Library = () => {
@@ -15,20 +17,18 @@ const Library = () => {
   const [activeFilter, setActiveFilter] = useState(null);
   const id = useSelector(state => state.player.currentTrack);
     const [song, setSongs] = useState([]);
-
-  useEffect(() => {
+    useFocusEffect(
+  useCallback(() => {
     const loadLibrary = async () => {
       if (token) {
         try {
           const playlists = await fetchMyPlayist(token);
           const albums = await fetchMyAlbum(token);
-          const artist=await fetchMyArtist(token);
-            const songs = await fetchSavedSongs(token);
-          
+          const artist = await fetchMyArtist(token);
+          const songs = await fetchSavedSongs(token);
+
           const extractedTracks = songs.items.map(item => item.track);
-           setSongs(extractedTracks);
-         
-          
+          setSongs(extractedTracks);
 
           const playlistItems = playlists.items.map(item => ({
             ...item,
@@ -39,12 +39,13 @@ const Library = () => {
             ...item.album,
             type: 'album',
           }));
-           const artistItems = artist.map(item => ({
+
+          const artistItems = artist.map(item => ({
             ...item,
             type: 'artist',
           }));
 
-          const allItems = [...playlistItems, ...albumItems,...artistItems];
+          const allItems = [...playlistItems, ...albumItems, ...artistItems];
           setLibraryItems(allItems);
           setFilteredItems(allItems);
         } catch (err) {
@@ -52,8 +53,11 @@ const Library = () => {
         }
       }
     };
+
     loadLibrary();
-  }, [token]);
+  }, [token])
+);
+
 
   const handleFilter = (type) => {
     setActiveFilter(type);
