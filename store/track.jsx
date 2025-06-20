@@ -6,7 +6,6 @@ const initialState = {
   trackList: [],
   currentAlbum: null,
   currentPlaylist: null,
-  likesVersion: 0,
   source: null,
 };
 
@@ -31,9 +30,6 @@ const playerSlice = createSlice({
     },
     resetPlayer: () => initialState,
   
-  incrementLikesVersion: state => {
-    state.likesVersion += 1;
-  },
   setSource: (state, action) => {
     state.source = action.payload;
   }

@@ -140,13 +140,13 @@ export default function Player({navigation}) {
                   const success = await LikeTrack(id, token);
                   if (success) {
                     setLiked(true);
-                    dispatch(incrementLikesVersion())
+                    
                   }
                 } else {
                   const success = await unLikeTrack(id, token);
                   if (success) {
                     setLiked(false);
-                    dispatch(incrementLikesVersion())
+                 
                     
                   }
                 }
