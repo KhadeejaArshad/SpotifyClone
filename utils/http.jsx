@@ -419,11 +419,16 @@ export async function playAlbum(
 
   let startIndex = 0;
   if (selectedTrackId) {
+    
+    
     const index = formattedTracks.findIndex(t => t.id === selectedTrackId);
+    console.log(index);
+    
     if (index !== -1) {
       startIndex = index;
+       await TrackPlayer.skip(startIndex);
 
-      await TrackPlayer.skip(formattedTracks[startIndex].id);
+     
     }
   }
 
@@ -531,7 +536,7 @@ export async function playPlaylist(
     const index = formattedTracks.findIndex(t => t.id === selectedTrackId);
     if (index !== -1) {
       startIndex = index;
-      await TrackPlayer.skip(formattedTracks[startIndex].id);
+      await TrackPlayer.skip(startIndex);
     }
   }
 
@@ -581,9 +586,10 @@ export async function unLikeTrack(id, accesstoken) {
   }
 }
 
-export async function playLiked(token, dispatch, shouldDispatch = true) {
+export async function playLiked(token, dispatch, selectedTrackId = null, shouldDispatch = true) {
+    await TrackPlayer.reset();
   try {
-    // Step 1: Fetch saved songs
+ 
     const songs = await fetchSavedSongs(token);
     const formattedTracks = songs.items.map((item, index) => {
       const track = item.track;
@@ -598,10 +604,22 @@ export async function playLiked(token, dispatch, shouldDispatch = true) {
     });
 
    
-    await TrackPlayer.reset();
-    await TrackPlayer.add(formattedTracks);
-    await TrackPlayer.play();
+  try {
+    await addTracks(formattedTracks);
+  } catch (err) {
+    console.error('TrackPlayer addTracks error:', err);
+  }
 
+  let startIndex = 0;
+  if (selectedTrackId) {
+    const index = formattedTracks.findIndex(t => t.id === selectedTrackId);
+    if (index !== -1) {
+      startIndex = index;
+      await TrackPlayer.skip(startIndex);
+    }
+  }
+
+  await TrackPlayer.play();
     
     if (shouldDispatch) {
       dispatch(setTrackList(formattedTracks));

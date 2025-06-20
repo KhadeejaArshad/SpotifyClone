@@ -54,7 +54,7 @@ export default function AlbumView({navigation, route}) {
     return newDate.getFullYear();
   }
   useTrackPlayerEvents(
-    [Event.PlaybackState, Event.PlaybackTrackChanged],
+    [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
     async event => {
       if (event.type === Event.PlaybackState) {
         if (event.state === State.Playing) {
@@ -74,7 +74,7 @@ export default function AlbumView({navigation, route}) {
       });
 
       if (
-        event.type === Event.PlaybackTrackChanged &&
+        event.type === Event.PlaybackActiveTrackChanged &&
         event.nextTrack != null
       ) {
         const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
@@ -92,7 +92,8 @@ export default function AlbumView({navigation, route}) {
     <Pressable
       onPress={() => {
         (async () => {
-          await playAlbum(album.id, token, dispatch, true, item.id);
+          await playAlbum(album.id, token, dispatch,item.id, true);
+
         })();
       }}>
       <View style={styles.card}>

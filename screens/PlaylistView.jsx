@@ -40,7 +40,7 @@ export default function PlaylistView({route, navigation}) {
 
   const dispatch = useDispatch();
   const id = route.params.id;
- ;
+ 
 
   const token = useSelector(state => state.auth.token);
   const playing = useSelector(state => state.player.isPlaying);

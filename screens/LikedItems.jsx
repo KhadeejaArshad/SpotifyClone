@@ -82,7 +82,12 @@ export default function LikedItems({navigation,route}) {
   const renderItem = ({item}) => {
      const isCurrent = item.id === trackid;
     return (
-      <Pressable onPress={() => dispatch(setcurTrack(item.id))}>
+       <Pressable
+             onPress={() => {
+               (async () => {
+                 await playLiked(token, dispatch,item.id,true);
+               })();
+             }}>
         <View style={styles.card}>
           <Image
             source={{uri: item.album.images[0].url}}
