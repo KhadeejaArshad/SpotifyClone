@@ -196,13 +196,23 @@ export default function AlbumView({navigation, route}) {
       </View>
 
       <View style={{flex: 1}}>
-        <View style={styles.imageContainer}>
+       
+
+      
+
+        <FlatList
+          data={track}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            <>
+              <View style={styles.imageContainer}>
           {album?.images && (
             <Image style={styles.images} source={{uri: album.images[0].url}} />
           )}
         </View>
-
-        {album && (
+          {album && (
           <>
             <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
               {album.name}
@@ -286,12 +296,8 @@ export default function AlbumView({navigation, route}) {
             </View>
           </>
         )}
-
-        <FlatList
-          data={track}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
+            </>
+          }
         />
       </View>
       <View>{trackid && <Play />}</View>

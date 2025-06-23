@@ -181,7 +181,17 @@ export default function PlaylistView({route, navigation}) {
       </View>
 
       <View style={{flex: 1}}>
-        <View style={styles.imageContainer}>
+       
+
+       
+
+        <FlatList
+          data={playlist?.tracks?.items || []}
+          renderItem={renderItem}
+          keyExtractor={item => item.track?.id}
+          ListHeaderComponent={
+            <>
+             <View style={styles.imageContainer}>
           {playlist?.images && (
             <Image
               style={styles.images}
@@ -189,8 +199,7 @@ export default function PlaylistView({route, navigation}) {
             />
           )}
         </View>
-
-        {playlist && (
+         {playlist && (
           <>
             <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
               {playlist.name}
@@ -270,10 +279,9 @@ export default function PlaylistView({route, navigation}) {
           </>
         )}
 
-        <FlatList
-          data={playlist?.tracks?.items || []}
-          renderItem={renderItem}
-          keyExtractor={item => item.track?.id}
+
+            </>
+          }
         />
       </View>
 

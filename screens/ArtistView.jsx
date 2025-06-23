@@ -123,7 +123,16 @@ export default function ArtistView({route, navigation}) {
       </View>
 
       <View style={{flex: 1}}>
-        <View style={styles.imageContainer}>
+       
+
+       
+        <FlatList
+          data={albums?.items || []}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          ListHeaderComponent={
+            <>
+             <View style={styles.imageContainer}>
           {playlist?.images && (
             <Image
               style={styles.images}
@@ -131,8 +140,7 @@ export default function ArtistView({route, navigation}) {
             />
           )}
         </View>
-
-        {playlist && (
+         {playlist && (
           <>
             <TextCmp weight='Demi' size={25} marginH={8} marginV={8}>{playlist.name}</TextCmp>
             <View style={styles.something}>
@@ -178,10 +186,10 @@ export default function ArtistView({route, navigation}) {
           </>
         )}
 
-        <FlatList
-          data={albums?.items || []}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
+
+
+            </>
+          }
         />
       </View>
 
