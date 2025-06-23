@@ -24,6 +24,7 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import {FlatList} from 'react-native-gesture-handler';
 import Play from '../components/Play';
 import {setcurTrack, setPlaying} from '../store/track';
+import {Animated} from 'react-native';
 
 import TrackPlayer from 'react-native-track-player';
 import {addTracks} from '../utils/trackPlayer';
@@ -34,6 +35,9 @@ import {
   horizontalScale,
   moderateScale,
 } from '../utils/fonts/fonts';
+import {useRef} from 'react';
+import { useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function AlbumView({navigation, route}) {
   const [album, setAlbum] = useState(null);
@@ -48,6 +52,29 @@ export default function AlbumView({navigation, route}) {
   const trackid = useSelector(state => state.player.currentTrack);
   const currentAlbumId = useSelector(state => state.player.currentAlbum);
   const [loading, setLoading] = useState(true);
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const imageScale = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [236, 70],
+    extrapolate: 'clamp',
+  });
+  const titleOpacity = scrollY.interpolate({
+    inputRange: [100, 200],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+   const iconOpacity = scrollY.interpolate({
+    inputRange: [250, 300],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const stickyIconTranslateY = scrollY.interpolate({
+    inputRange: [250, 300],
+     outputRange: [ 0,30],
+    extrapolate: 'clamp',
+  });
 
   function getYear(date) {
     const newDate = new Date(date);
@@ -85,46 +112,55 @@ export default function AlbumView({navigation, route}) {
     },
   );
 
-  const renderItem = ({item}) =>{
+
+useFocusEffect(
+  React.useCallback(() => {
+    return () => {
+      scrollY.setValue(0); 
+    };
+  }, [])
+);
+
+
+  const renderItem = ({item}) => {
     const isCurrent = item.id === trackid;
 
-   return(
-    <Pressable
-      onPress={() => {
-        (async () => {
-          await playAlbum(album.id, token, dispatch,item.id, true);
-
-        })();
-      }}>
-      <View style={styles.card}>
-        <TextCmp
-          marginH={14}
-          weight="medium"
-          marginV={4}
-          size={16}
-          color={isCurrent ? '#1ED760' : 'white'}>
-          {item.name}
-        </TextCmp>
-        <View style={styles.track}>
-          <View style={styles.trackdesc}>
-            <Image style={styles.dicon} source={images.download} />
-            <TextCmp color="#B3B3B3" marginH={4} style={styles.artist}>
-              {album?.artists[0]?.name}
-            </TextCmp>
-          </View>
-          <View>
-            <AntDesign
-              name="ellipsis"
-              size={24}
-              color="white"
-              style={{marginHorizontal: 8}}
-            />
+    return (
+      <Pressable
+        onPress={() => {
+          (async () => {
+            await playAlbum(album.id, token, dispatch, item.id, true);
+          })();
+        }}>
+        <View style={styles.card}>
+          <TextCmp
+            marginH={14}
+            weight="medium"
+            marginV={4}
+            size={16}
+            color={isCurrent ? '#1ED760' : 'white'}>
+            {item.name}
+          </TextCmp>
+          <View style={styles.track}>
+            <View style={styles.trackdesc}>
+              <Image style={styles.dicon} source={images.download} />
+              <TextCmp color="#B3B3B3" marginH={4} style={styles.artist}>
+                {album?.artists[0]?.name}
+              </TextCmp>
+            </View>
+            <View>
+              <AntDesign
+                name="ellipsis"
+                size={24}
+                color="white"
+                style={{marginHorizontal: 8}}
+              />
+            </View>
           </View>
         </View>
-      </View>
-    </Pressable>
-  );
-}
+      </Pressable>
+    );
+  };
   const [isPlayerReady, setIsPlayerReady] = useState(false);
 
   useEffect(() => {
@@ -193,14 +229,56 @@ export default function AlbumView({navigation, route}) {
           style={{marginHorizontal: 24}}
           onPress={() => navigation.goBack()}
         />
+        <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
+          {album?.name}
+        </TextCmp>
+        
+  <Animated.View
+    style={{
+      opacity:iconOpacity,
+      transform: [{ translateY: stickyIconTranslateY }],
+      position: 'absolute',
+      right: 10,
+    
+    }}>
+    <Pressable
+      onPress={async () => {
+        try {
+          if (currentAlbumId === album.id) {
+            if (playing) {
+              await TrackPlayer.pause();
+              dispatch(setPlaying(false));
+            } else {
+              await TrackPlayer.play();
+              dispatch(setPlaying(true));
+            }
+          } else {
+            await playAlbum(album.id, token, dispatch, trackid, true);
+          }
+        } catch (error) {
+          console.error('Error handling album press:', error);
+        }
+      }}>
+      <Ionicons
+        name={
+          playing && currentAlbumId === album.id
+            ? 'pause-circle'
+            : 'play-circle'
+        }
+        color="#1ED760"
+        size={76}
+      />
+    </Pressable>
+  </Animated.View>
       </View>
 
       <View style={{flex: 1}}>
-       
-
-      
-
-        <FlatList
+        <Animated.FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: false},
+          )}
+          scrollEventThrottle={16}
           data={track}
           renderItem={renderItem}
           keyExtractor={item => item.id}
@@ -208,94 +286,121 @@ export default function AlbumView({navigation, route}) {
           ListHeaderComponent={
             <>
               <View style={styles.imageContainer}>
-          {album?.images && (
-            <Image style={styles.images} source={{uri: album.images[0].url}} />
-          )}
-        </View>
-          {album && (
-          <>
-            <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
-              {album.name}
-            </TextCmp>
-            <View style={styles.something}>
-              <View>
-                <View style={styles.artistdesc}>
-                  <Image
-                    style={styles.artistimage}
-                    source={{uri: artist.images[0].url}}
-                  />
-
-                  <TextCmp
-                    marginH={8}
-                    marginV={6}
-                    size={14}
-                    weight="Demi"
-                    style={styles.artistName}>
-                    {album.artists[0].name}
-                  </TextCmp>
-                </View>
-                <View style={styles.albumdesc}>
-                  <TextCmp>{album.type}</TextCmp>
-                  <TextCmp>{getYear(album.release_date)}</TextCmp>
-                </View>
+                <Animated.View
+                  style={[
+                    styles.imageContainer,
+                    {width: imageScale, height: imageScale},
+                  ]}>
+                  {album?.images && (
+                    <Image
+                      style={styles.images}
+                      source={{uri: album.images[0].url}}
+                    />
+                  )}
+                </Animated.View>
               </View>
 
-              <Pressable
-                onPress={async () => {
-                  try {
-                    if (currentAlbumId === album.id) {
-                      if (playing) {
-                        await TrackPlayer.pause();
-                        dispatch(setPlaying(false));
-                      } else {
-                        await TrackPlayer.play();
-                        dispatch(setPlaying(true));
-                      }
-                    } else {
-                      await playAlbum(album.id, token, dispatch, trackid, true);
-                    }
-                  } catch (error) {
-                    console.error('Error handling album press:', error);
-                  }
-                }}>
-                <Ionicons
-                  name={
-                    playing && currentAlbumId === album.id
-                      ? 'pause-circle'
-                      : 'play-circle'
-                  }
-                  color="#1ED760"
-                  size={76}
-                />
-              </Pressable>
-            </View>
+              {album && (
+                <>
+                  <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
+                    {album.name}
+                  </TextCmp>
+                  <View style={styles.something}>
+                    <View>
+                      <View style={styles.artistdesc}>
+                        <Image
+                          style={styles.artistimage}
+                          source={{uri: artist.images[0].url}}
+                        />
 
-            <View style={styles.iconcontainer}>
-              <Pressable
-                onPress={() => setPressed(!pressed)}
-                style={({pressed}) => [
-                  styles.pressable,
-                  pressed && styles.pressedStyle,
-                ]}>
-                <Image
-                  source={
-                    pressed
-                      ? require('../assets/Images/Player/unlike.png')
-                      : require('../assets/Images/Player/like.png')
-                  }
-                  style={[styles.icon]}
-                />
-              </Pressable>
-              <Image source={images.download} />
-              <AntDesign
-                name="ellipsis"
-                size={24}
-                color="white"
-                style={{marginHorizontal: 8}}
-              />
-            </View>
-          </>
-        )}
+                        <TextCmp
+                          marginH={8}
+                          marginV={6}
+                          size={14}
+                          weight="Demi"
+                          style={styles.artistName}>
+                          {album.artists[0].name}
+                        </TextCmp>
+                      </View>
+                      <View style={styles.albumdesc}>
+                        <TextCmp>{album.type}</TextCmp>
+                        <TextCmp>{getYear(album.release_date)}</TextCmp>
+                      </View>
+                    </View>
+                    <Animated.View
+                      style={{
+                        position: 'absolute',
+                        right: 10,
+                        zIndex: 10,
+                        top:48,
+                        
+                      
+                      
+                        transform: [{translateY: stickyIconTranslateY}],
+                      }}>
+                      <Pressable
+                        onPress={async () => {
+                          try {
+                            if (currentAlbumId === album.id) {
+                              if (playing) {
+                                await TrackPlayer.pause();
+                                dispatch(setPlaying(false));
+                              } else {
+                                await TrackPlayer.play();
+                                dispatch(setPlaying(true));
+                              }
+                            } else {
+                              await playAlbum(
+                                album.id,
+                                token,
+                                dispatch,
+                                trackid,
+                                true,
+                              );
+                            }
+                          } catch (error) {
+                            console.error('Error handling album press:', error);
+                          }
+                        }}>
+                        <Ionicons
+                          name={
+                            playing && currentAlbumId === album.id
+                              ? 'pause-circle'
+                              : 'play-circle'
+                          }
+                          color="#1ED760"
+                          size={76}
+                        />
+                      </Pressable>
+                    </Animated.View>
+                  </View>
+
+                  <View style={styles.iconcontainer}>
+                    <Pressable
+                      onPress={() => setPressed(!pressed)}
+                      style={({pressed}) => [
+                        styles.pressable,
+                        pressed && styles.pressedStyle,
+                      ]}>
+                      <Image
+                        source={
+                          pressed
+                            ? require('../assets/Images/Player/unlike.png')
+                            : require('../assets/Images/Player/like.png')
+                        }
+                        style={[styles.icon]}
+                      />
+                    </Pressable>
+                    <Image source={images.download} />
+                    <AntDesign
+                      name="ellipsis"
+                      size={24}
+                      color="white"
+                      style={{marginHorizontal: 8}}
+                    />
+                  </View>
+                </>
+              )}
             </>
           }
         />
@@ -311,12 +416,12 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     marginVertical: verticalScale(50),
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
   },
   images: {
-    width: horizontalScale(234),
-    height: verticalScale(236),
+    width: '100%',
+    height: '100%',
   },
   imageContainer: {
     justifyContent: 'center',
@@ -335,7 +440,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginTop: verticalScale(-30),
+    marginTop: verticalScale(5),
   },
   albuminfo: {
     flexDirection: 'row',
