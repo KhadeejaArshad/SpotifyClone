@@ -18,8 +18,10 @@ import {setcurTrack, setPlaying} from '../store/track';
 
 import TrackPlayer from 'react-native-track-player';
 import {useTrackPlayerEvents, Event} from 'react-native-track-player';
-
-export default function LikedItems({navigation,route}) {
+import {useRef} from 'react';
+import {Animated} from 'react-native';
+import {useFocusEffect} from '@react-navigation/native';
+export default function LikedItems({navigation, route}) {
   const token = useSelector(state => state.auth.token);
   const trackid = useSelector(state => state.player.currentTrack);
 
@@ -27,9 +29,31 @@ export default function LikedItems({navigation,route}) {
   const playing = useSelector(state => state.player.isPlaying);
   const source = useSelector(state => state.player.source);
   const dispatch = useDispatch();
- 
 
-  const song=route.params.song
+  const song = route.params.song;
+  const scrollY = useRef(new Animated.Value(0)).current;
+
+  const imageScale = scrollY.interpolate({
+    inputRange: [0, 100],
+    outputRange: [236, 70],
+    extrapolate: 'clamp',
+  });
+  const titleOpacity = scrollY.interpolate({
+    inputRange: [100, 200],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+  const iconOpacity = scrollY.interpolate({
+    inputRange: [250, 300],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const stickyIconTranslateY = scrollY.interpolate({
+    inputRange: [250, 300],
+    outputRange: [0, 30],
+    extrapolate: 'clamp',
+  });
 
   useTrackPlayerEvents(
     [Event.PlaybackState, Event.PlaybackTrackChanged],
@@ -77,17 +101,23 @@ export default function LikedItems({navigation,route}) {
     setup();
   }, []);
 
-
+  useFocusEffect(
+    React.useCallback(() => {
+      return () => {
+        scrollY.setValue(0);
+      };
+    }, []),
+  );
 
   const renderItem = ({item}) => {
-     const isCurrent = item.id === trackid;
+    const isCurrent = item.id === trackid;
     return (
-       <Pressable
-             onPress={() => {
-               (async () => {
-                 await playLiked(token, dispatch,item.id,true);
-               })();
-             }}>
+      <Pressable
+        onPress={() => {
+          (async () => {
+            await playLiked(token, dispatch, item.id, true);
+          })();
+        }}>
         <View style={styles.card}>
           <Image
             source={{uri: item.album.images[0].url}}
@@ -136,83 +166,134 @@ export default function LikedItems({navigation,route}) {
           style={{marginHorizontal: 24}}
           onPress={() => navigation.navigate('Library')}
         />
+        <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
+          LikedSongs
+        </TextCmp>
+        <Animated.View
+           style={{
+            opacity: iconOpacity,
+            transform: [{translateY: stickyIconTranslateY}],
+            position: 'absolute',
+            right: 10,
+          }}>
+          <Pressable
+            onPress={async () => {
+              try {
+                if (source === 'liked') {
+                  if (playing) {
+                    await TrackPlayer.pause();
+                    dispatch(setPlaying(false));
+                  } else {
+                    await TrackPlayer.play();
+                    dispatch(setPlaying(true));
+                  }
+                } else {
+                  await playLiked(token, dispatch, true);
+                }
+              } catch (error) {
+                console.error('Error handling album press:', error);
+              }
+            }}>
+            <Ionicons
+              name={
+                playing && source === 'liked' ? 'pause-circle' : 'play-circle'
+              }
+              color="#1ED760"
+              size={76}
+            />
+          </Pressable>
+        </Animated.View>
       </View>
 
       <View style={{flex: 1}}>
-        <View style={styles.imageContainer}>
-          <Image style={styles.mainimage} source={images.liked} />
-        </View>
-
-        <>
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              marginVertical: 8,
-              marginBottom: -20,
-            }}>
-            <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
-              LikedSongs
-            </TextCmp>
-            <Pressable
-              onPress={async () => {
-                try {
-                  if (source === 'liked') {
-                    if (playing) {
-                      await TrackPlayer.pause();
-                      dispatch(setPlaying(false));
-                    } else {
-                      await TrackPlayer.play();
-                      dispatch(setPlaying(true));
-                    }
-                  } else {
-                    await playLiked(token, dispatch, true);
-                  }
-                } catch (error) {
-                  console.error('Error handling album press:', error);
-                }
-              }}>
-              <Ionicons
-                name={
-                  playing && source === 'liked' ? 'pause-circle' : 'play-circle'
-                }
-                color="#1ED760"
-                size={76}
-              />
-            </Pressable>
-          </View>
-
-          <View style={styles.iconcontainer}>
-            <Pressable
-              onPress={() => setPressed(!pressed)}
-              style={({pressed}) => [
-                styles.pressable,
-                pressed && styles.pressedStyle,
-              ]}>
-              <Image
-                source={
-                  pressed
-                    ? require('../assets/Images/Player/like.png')
-                    : require('../assets/Images/Player/unlike.png')
-                }
-                style={[styles.icon]}
-              />
-            </Pressable>
-            <Image source={images.download} />
-            <AntDesign
-              name="ellipsis"
-              size={24}
-              color="white"
-              style={{marginHorizontal: 8}}
-            />
-          </View>
-        </>
-
-        <FlatList
+        <Animated.FlatList
+          onScroll={Animated.event(
+            [{nativeEvent: {contentOffset: {y: scrollY}}}],
+            {useNativeDriver: false},
+          )}
+          scrollEventThrottle={16}
           data={song}
           renderItem={renderItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          ListHeaderComponent={
+            <>
+              <View style={styles.imageContainer}>
+                <Animated.View
+                  style={[
+                    styles.imageContainer,
+                    {width: imageScale, height: imageScale},
+                  ]}>
+                  <Image style={styles.mainimage} source={images.liked} />
+                </Animated.View>
+              </View>
+              <>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginVertical: 8,
+                  }}>
+                  <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
+                    LikedSongs
+                  </TextCmp>
+                  <Pressable
+                    onPress={async () => {
+                      try {
+                        if (source === 'liked') {
+                          if (playing) {
+                            await TrackPlayer.pause();
+                            dispatch(setPlaying(false));
+                          } else {
+                            await TrackPlayer.play();
+                            dispatch(setPlaying(true));
+                          }
+                        } else {
+                          await playLiked(token, dispatch, true);
+                        }
+                      } catch (error) {
+                        console.error('Error handling album press:', error);
+                      }
+                    }}>
+                    <Ionicons
+                      name={
+                        playing && source === 'liked'
+                          ? 'pause-circle'
+                          : 'play-circle'
+                      }
+                      color="#1ED760"
+                      size={76}
+                    />
+                  </Pressable>
+                </View>
+
+                <View style={styles.iconcontainer}>
+                  <Pressable
+                    onPress={() => setPressed(!pressed)}
+                    style={({pressed}) => [
+                      styles.pressable,
+                      pressed && styles.pressedStyle,
+                    ]}>
+                    <Image
+                      source={
+                        pressed
+                          ? require('../assets/Images/Player/like.png')
+                          : require('../assets/Images/Player/unlike.png')
+                      }
+                      style={[styles.icon]}
+                    />
+                  </Pressable>
+                  <Image source={images.download} />
+                  <AntDesign
+                    name="ellipsis"
+                    size={24}
+                    color="white"
+                    style={{marginHorizontal: 8}}
+                  />
+                </View>
+              </>
+            </>
+          }
         />
       </View>
       <View>{trackid && <Play />}</View>
@@ -267,9 +348,10 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     marginVertical: verticalScale(50),
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
   },
+
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -280,10 +362,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
-    marginTop: verticalScale(-5),
+    marginTop: verticalScale(-40),
   },
   mainimage: {
-    width: horizontalScale(234),
-    height: verticalScale(236),
+    width: '100%',
+    height: '100%',
   },
 });
