@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, FlatList, Image, Pressable} from 'react-native';
+import {StyleSheet, Text, View, FlatList, Image, Pressable,SafeAreaView,ActivityIndicator} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {fetchSavedSongs, playLiked} from '../utils/http';
@@ -21,6 +21,7 @@ import {useTrackPlayerEvents, Event} from 'react-native-track-player';
 import {useRef} from 'react';
 import {Animated} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
+import MediaView from '../components/View/View';
 export default function LikedItems({navigation, route}) {
   const token = useSelector(state => state.auth.token);
   const trackid = useSelector(state => state.player.currentTrack);
@@ -28,9 +29,11 @@ export default function LikedItems({navigation, route}) {
   const [pressed, setPressed] = useState(false);
   const playing = useSelector(state => state.player.isPlaying);
   const source = useSelector(state => state.player.source);
+  const [loading, setLoading] = useState(true);
+  const [songs,setSongs]=useState(null);
   const dispatch = useDispatch();
 
-  const song = route.params.song;
+  const song = route?.params?.song;
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const imageScale = scrollY.interpolate({
@@ -108,6 +111,21 @@ export default function LikedItems({navigation, route}) {
       };
     }, []),
   );
+useEffect(() => {
+  const loadSongs = async () => {
+    try {
+      const songs = await fetchSavedSongs(token);
+      const extractedTracks = songs.items.map(item => item.track);
+      setSongs(extractedTracks);
+    } catch (error) {
+      console.log("Can't fetch songs", error);
+    }finally{
+      setLoading(false)
+    }
+  };
+
+  loadSongs();
+}, [token]);
 
   const renderItem = ({item}) => {
     const isCurrent = item.id === trackid;
@@ -153,8 +171,22 @@ export default function LikedItems({navigation, route}) {
       </Pressable>
     );
   };
+if (loading || !song) {
+  return (
+    <LinearGradient
+      colors={['#353150', '#4d519b', '#4f6368']}
+      style={styles.linearGradient}>
+      <SafeAreaView style={styles.emptyState}>
+        <ActivityIndicator size="large" color="#1DB954" />
+      </SafeAreaView>
+    </LinearGradient>
+  );
+}
 
   return (
+  
+    
+
     <LinearGradient
       colors={['#353150', '#4d519b', '#4f6368']}
       style={styles.linearGradient}>
@@ -167,7 +199,7 @@ export default function LikedItems({navigation, route}) {
           onPress={() => navigation.navigate('Library')}
         />
         <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
-          LikedSongs
+          Liked Songs
         </TextCmp>
         <Animated.View
            style={{

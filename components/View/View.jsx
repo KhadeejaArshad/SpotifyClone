@@ -25,6 +25,7 @@ import Play from '../Play';
 import {useEffect} from 'react';
 import TextCmp from '../../UI/SpText';
 import {useNavigation} from '@react-navigation/native';
+import {playLiked} from '../../utils/http';
 
 import {useFocusEffect} from '@react-navigation/native';
 import {playAlbum, playPlaylist} from '../../utils/http';
@@ -34,7 +35,7 @@ import {
   moderateScale,
   horizontalScale,
 } from '../../utils/fonts/fonts';
-const MediaView = ({data, type, artist}) => {
+const MediaView = ({data, type, artist,colors}) => {
   const [pressed, setPressed] = useState(false);
 
   const currentAlbumId = useSelector(state => state.player.currentAlbum);
@@ -51,7 +52,9 @@ const MediaView = ({data, type, artist}) => {
 
   const token = useSelector(state => state.auth.token);
   const playing = useSelector(state => state.player.isPlaying);
+  const source = useSelector(state => state.player.source);
   const navigation = useNavigation();
+  console.log('bndghng', data);
 
   const imageScale = scrollY.interpolate({
     inputRange: [0, 100],
@@ -138,6 +141,8 @@ const MediaView = ({data, type, artist}) => {
       } else {
         if (type === 'album') {
           await playAlbum(data.id, token, dispatch, trackid, true);
+        } else if (type === 'liked') {
+          await playLiked(token, dispatch, true);
         } else {
           await playPlaylist(data.id, token, dispatch, trackid, true);
         }
@@ -156,6 +161,8 @@ const MediaView = ({data, type, artist}) => {
           (async () => {
             if (type === 'album') {
               await playAlbum(data.id, token, dispatch, item.id, true);
+            } else if (type === 'liked') {
+              await playLiked(token, dispatch, item.id, true);
             } else {
               await playPlaylist(data.id, token, dispatch, item.track.id, true);
             }
@@ -168,14 +175,13 @@ const MediaView = ({data, type, artist}) => {
             marginV={4}
             size={16}
             color={isCurrent ? '#1ED760' : 'white'}>
-            {type==='album'
-            ?item.name:item.track.name}
+            {type === 'album' || type === 'liked' ? item.name : item.track.name}
           </TextCmp>
           <View style={styles.track}>
             <View style={styles.trackdesc}>
               <Image style={styles.dicon} source={images.download} />
               <TextCmp color="#B3B3B3" marginH={4} style={styles.artist}>
-                {type === 'album'
+                {type === 'album' || type === 'liked'
                   ? data?.artists?.[0]?.name
                   : item?.track?.artists?.[0]?.name}
               </TextCmp>
@@ -211,7 +217,7 @@ const MediaView = ({data, type, artist}) => {
 
   return (
     <LinearGradient
-      colors={['#C63224', '#641D17', '#271513', '#121212']}
+      colors={colors}
       style={styles.linearGradient}>
       <View style={styles.header}>
         <AntDesign
@@ -219,11 +225,31 @@ const MediaView = ({data, type, artist}) => {
           size={20}
           color="white"
           style={{marginHorizontal: 24}}
-          onPress={() => navigation.goBack()}
+          onPress={() => {
+            if (type === 'liked') {
+              navigation.navigate('Library');
+            } else {
+              navigation.goBack();
+            }
+          }}
         />
-        <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
-          {data?.name}
-        </TextCmp>
+        {type === 'liked' ? (
+          <TextCmp
+            size={18}
+            weight="Demi"
+            opacity={titleOpacity}
+            animated={true}>
+            Liked Songs
+          </TextCmp>
+        ) : (
+          <TextCmp
+            size={18}
+            weight="Demi"
+            opacity={titleOpacity}
+            animated={true}>
+            {data?.name}
+          </TextCmp>
+        )}
 
         <Animated.View
           style={{
@@ -234,7 +260,11 @@ const MediaView = ({data, type, artist}) => {
           }}>
           <Pressable onPress={handlePress}>
             <Ionicons
-              name={playing && isCurrentMedia ? 'pause-circle' : 'play-circle'}
+              name={
+                (playing && isCurrentMedia) || source === 'liked'
+                  ? 'pause-circle'
+                  : 'play-circle'
+              }
               color="#1ED760"
               size={76}
             />
@@ -257,19 +287,24 @@ const MediaView = ({data, type, artist}) => {
           <>
             <View style={styles.imageContainer}>
               <Animated.View style={{width: imageScale, height: imageScale}}>
-                {data?.images && (
-                  <Image
-                    style={styles.images}
-                    source={{uri: data.images[0].url}}
-                  />
+                {type === 'liked' ? (
+                  <Image style={styles.mainimage} source={images.liked} />
+                ) : (
+                  data?.images && (
+                    <Image
+                      style={styles.images}
+                      source={{uri: data.images[0]?.url}}
+                    />
+                  )
                 )}
               </Animated.View>
             </View>
             {data && (
               <>
                 <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
-                  {data.name}
+                  {type === 'liked' ? 'Liked Songs' : data?.name}
                 </TextCmp>
+
                 <View style={styles.something}>
                   <View>
                     <View style={styles.artistdesc}>
@@ -315,7 +350,7 @@ const MediaView = ({data, type, artist}) => {
                     <Pressable onPress={handlePress}>
                       <Ionicons
                         name={
-                          playing && isCurrentMedia
+                          playing && (isCurrentMedia || source === 'liked')
                             ? 'pause-circle'
                             : 'play-circle'
                         }

@@ -1,9 +1,5 @@
 import {
   StyleSheet,
-  Text,
-  View,
-  Image,
-  Pressable,
   SafeAreaView,
   ActivityIndicator,
 } from 'react-native';
@@ -18,14 +14,6 @@ import {
 } from '../utils/http';
 import {useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-
-
-import {
-  verticalScale,
-  horizontalScale,
-  moderateScale,
-} from '../utils/fonts/fonts';
-
 import MediaView from '../components/View/View';
 
 export default function AlbumView({route}) {
@@ -87,7 +75,7 @@ if (loading || !album) {
 
   return (
   
-     <MediaView data={album} type={'album'} artist={artist}/>
+     <MediaView data={album} type={'album'} artist={artist} colors={['#C63224', '#641D17', '#271513', '#121212']}/>
    
   
    
@@ -100,76 +88,11 @@ const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    marginVertical: verticalScale(40),
-    // justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  images: {
-    width: '100%',
-    height: '100%',
-  },
-  imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  albumdesc: {
-    color: 'white',
-    flexDirection: 'row',
-    marginHorizontal: 8,
-    gap: 12,
-  },
-
-  iconcontainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    marginTop: verticalScale(5),
-  },
-  albuminfo: {
-    flexDirection: 'row',
-  },
-  something: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginHorizontal: horizontalScale(8),
-  },
-  trackdesc: {
-    flexDirection: 'row',
-    marginHorizontal: horizontalScale(12),
-    gap: 8,
-    alignItems: 'center',
-  },
-  track: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-
-
-  dicon: {
-    width: horizontalScale(16),
-    height: verticalScale(16),
-  },
-  card: {
-    marginVertical: verticalScale(8),
-  },
-  artistimage: {
-    width: horizontalScale(23),
-    height: verticalScale(23),
-    borderRadius: moderateScale(12),
-  },
-  artistdesc: {
-    flexDirection: 'row',
-  },
+  
   emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  root: {
-    flex: 1,
-    backgroundColor: '#111111',
-  },
+
 });
