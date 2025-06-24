@@ -39,6 +39,7 @@ import {useRef} from 'react';
 import { useCallback } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 
+
 export default function AlbumView({navigation, route}) {
   const [album, setAlbum] = useState(null);
   const [pressed, setPressed] = useState(false);
@@ -53,33 +54,36 @@ export default function AlbumView({navigation, route}) {
   const currentAlbumId = useSelector(state => state.player.currentAlbum);
   const [loading, setLoading] = useState(true);
   const scrollY = useRef(new Animated.Value(0)).current;
-
   const imageScale = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [236, 70],
+    inputRange: [0, 80],
+    outputRange: [236, 80],
     extrapolate: 'clamp',
   });
+
   const titleOpacity = scrollY.interpolate({
-    inputRange: [100, 200],
+    inputRange: [50, 150],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
-   const iconOpacity = scrollY.interpolate({
-    inputRange: [250, 300],
+
+  const iconOpacity = scrollY.interpolate({
+    inputRange: [180, 250],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
 
   const stickyIconTranslateY = scrollY.interpolate({
-    inputRange: [250, 300],
-     outputRange: [ 0,30],
+    inputRange: [180, 250],
+    outputRange: [0, 30],
     extrapolate: 'clamp',
   });
-
+  
   function getYear(date) {
     const newDate = new Date(date);
     return newDate.getFullYear();
   }
+
+
   useTrackPlayerEvents(
     [Event.PlaybackState, Event.PlaybackActiveTrackChanged],
     async event => {
@@ -153,7 +157,7 @@ useFocusEffect(
                 name="ellipsis"
                 size={24}
                 color="white"
-                style={{marginHorizontal: 8}}
+                style={{marginHorizontal: 8, transform:[{rotate:'90deg'}]}}
               />
             </View>
           </View>
@@ -208,7 +212,7 @@ useFocusEffect(
   if (loading) {
     return (
       <LinearGradient
-        colors={['#962419', '#661710', '#430E09']}
+        colors={['#C63224', '#641D17', '#271513','#121212']}
         style={styles.linearGradient}>
         <SafeAreaView style={styles.emptyState}>
           <ActivityIndicator size="large" color="#1DB954" />
@@ -219,7 +223,7 @@ useFocusEffect(
 
   return (
     <LinearGradient
-      colors={['#962419', '#661710', '#430E09']}
+      colors={['#C63224', '#641D17', '#271513','#121212']}
       style={styles.linearGradient}>
       <View style={styles.header}>
         <AntDesign
@@ -283,14 +287,15 @@ useFocusEffect(
           renderItem={renderItem}
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: 300 }}
           ListHeaderComponent={
             <>
               <View style={styles.imageContainer}>
                 <Animated.View
-                  style={[
-                    styles.imageContainer,
-                    {width: imageScale, height: imageScale},
-                  ]}>
+                  style={
+                    
+                    {width: imageScale, height: imageScale}
+                  }>
                   {album?.images && (
                     <Image
                       style={styles.images}
@@ -415,7 +420,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    marginVertical: verticalScale(50),
+    marginVertical: verticalScale(40),
     // justifyContent: 'space-between',
     alignItems: 'center',
   },
@@ -426,7 +431,9 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: verticalScale(20),
+    
+    
+    
   },
 
   albumdesc: {
