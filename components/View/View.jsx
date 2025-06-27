@@ -262,8 +262,8 @@ const MediaView = ({data, type, artist,colors}) => {
             <Ionicons
               name={
                 (playing && isCurrentMedia) || source === 'liked'
-                  ? 'pause-circle'
-                  : 'play-circle'
+                  ? 'play-circle'
+                  : 'pause-circle'
               }
               color="#1ED760"
               size={76}
