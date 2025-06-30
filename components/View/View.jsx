@@ -74,7 +74,7 @@ const MediaView = ({data, type, artist,colors}) => {
 
   const stickyIconTranslateY = scrollY.interpolate({
     inputRange: [250, 300],
-    outputRange: [0, 30],
+    outputRange: [30, 30],
     extrapolate: 'clamp',
   });
   function getYear(date) {
