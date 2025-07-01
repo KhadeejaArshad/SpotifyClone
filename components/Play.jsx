@@ -112,9 +112,9 @@ export default function Play() {
           </View>
 
           <View style={styles.desc}>
-            <TextCmp weight="Demi" size={moderateScale(10)}>
+            <TextCmp weight="Demi" size={moderateScale(13)}>
               {track?.name}
-              <TextCmp weight="medium" size={moderateScale(10)}>
+              <TextCmp weight="medium" size={moderateScale(13)}>
                 {track?.artists?.[0]?.name || 'Unknown Artist'}
               </TextCmp>
             </TextCmp>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
    
-    height: verticalScale(59),
+    height: verticalScale(56),
     alignItems: 'center',
     borderRadius: moderateScale(8),
     // paddingHorizontal: scale(8),

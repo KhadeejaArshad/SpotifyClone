@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: verticalScale(20),
+    
   },
 
   iconcontainer: {
