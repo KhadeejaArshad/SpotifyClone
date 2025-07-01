@@ -27,8 +27,8 @@ export default function Wrap({data}) {
       style={[
         styles.item,
         {
-          marginLeft: index === 0 ? 12 : 0,
-          marginRight: index === album.length - 1 ? 8 : 12,
+          marginLeft: scale(index === 0 ? 12 : 0),
+          marginRight: scale(index === album.length - 1 ? 8 : 12),
         },
       ]}
     >

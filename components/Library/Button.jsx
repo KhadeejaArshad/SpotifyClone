@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(20),
     alignItems: 'center',
     justifyContent: 'center',
+    marginHorizontal:scale(4)
   },
   activeButton: {
     backgroundColor: '#1ED760',

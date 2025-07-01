@@ -1,4 +1,4 @@
-import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Image, ImageBackground, Pressable, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {images} from '../assets/image';
 import {fonts} from '../utils/fonts';
@@ -28,30 +28,45 @@ export default function Login() {
   };
 
   return (
-    <ScrollView style={styles.root}>
-      <Image source={images.login} style={styles.img} />
-    <View style={styles.textcontainer}>
-        <TextCmp weight='bold' size={28} marginV={4}>Millions of Songs.</TextCmp>
-      <TextCmp  weight='bold' size={28} marginV={4}>Free on Spotify.</TextCmp>
-    </View>
-      <Pressable onPress={handleSpotifyLogin}>
-        <View style={styles.buttonOuterContainer}>
-          <TextCmp color='black' alignment='center' weight='Demi' size={16} >Sign Up for free</TextCmp>
-        </View>
-      </Pressable>
-      <LoginButoon image={images.google}  text={'Continue with Google'}/>
-      <LoginButoon image={images.facebook} text={'Continue with Facebook'}/>
-      <LoginButoon image={images.apple} text={'Continue with Apple'}/>
-     
-      <Pressable onPress={handleSpotifyLogin}>
-        <TextCmp alignment='center' size={20} weight='Demi' marginV={10}>Log in</TextCmp>
-      </Pressable>
-        
 
-     
-      
-    </ScrollView>
-  );
+  <ScrollView style={styles.root}>
+    
+    <ImageBackground source={images.login} style={styles.img}>
+      <View style={styles.textcontainer}>
+        <TextCmp weight="bold" size={28} marginV={4}>
+          Millions of Songs.
+        </TextCmp>
+        <TextCmp weight="bold" size={28} marginV={4}>
+          Free on Spotify.
+        </TextCmp>
+      </View>
+    </ImageBackground>
+
+    <Pressable onPress={handleSpotifyLogin}>
+      <View style={styles.buttonOuterContainer}>
+        <TextCmp
+          color="black"
+          alignment="center"
+          weight="Demi"
+          size={16}>
+          Sign Up for free
+        </TextCmp>
+      </View>
+    </Pressable>
+
+    <LoginButoon image={images.google} text="Continue with Google" />
+    <LoginButoon image={images.facebook} text="Continue with Facebook" />
+    <LoginButoon image={images.apple} text="Continue with Apple" />
+
+    <Pressable onPress={handleSpotifyLogin}>
+      <TextCmp alignment="center" size={20} weight="Demi" marginV={10}>
+        Log in
+      </TextCmp>
+    </Pressable>
+  </ScrollView>
+);
+
+
 }
 
 const styles = StyleSheet.create({
@@ -75,17 +90,21 @@ const styles = StyleSheet.create({
   },
 
 
-  textcontainer:{
-  justifyContent: 'center',
-  alignItems: 'center', 
-
  
-  },
-  img:{
-    width:scale(380),
-    height:scale(465)
-    
-  }
+  img: {
+  width: '100%',
+  resizeMode: 'cover',
+  justifyContent: 'center', 
+  alignItems: 'center',    
+  paddingVertical: 30, 
+  height:verticalScale(465)     
+},
+textcontainer: {
+  flex:1,
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+},
+
 
 
 });

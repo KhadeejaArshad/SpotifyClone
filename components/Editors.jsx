@@ -33,8 +33,8 @@ export default function Editors({data}) {
       style={[
         styles.item,
         {
-          marginLeft: index === 0 ? 12 : 0,
-          marginRight: index === song.length - 1 ? 12 : 12,
+          marginLeft: scale(index === 0 ? 12 : 0),
+          marginRight: scale(index === song.length - 1 ? 12 : 12),
         },
       ]}>
       <Image style={styles.image} source={{uri: item?.image}} />

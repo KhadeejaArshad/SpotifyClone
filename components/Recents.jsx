@@ -24,8 +24,8 @@ export default function Recents({data}) {
         style={[
           styles.item,
           {
-            marginLeft: index === 0 ? 16 : 0,
-            marginRight: index === tracks.length - 1 ? 16 : 12,
+            marginLeft: scale(index === 0 ? 16 : 0),
+            marginRight: scale(index === tracks.length - 1 ? 16 : 12),
           },
         ]}
       >
