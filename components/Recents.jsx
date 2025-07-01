@@ -8,7 +8,7 @@ import {useState, useEffect} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import TextCmp from '../UI/SpText';
 import {setRecentsLoading} from '../store/appSlice';
-import { verticalScale,horizontalScale,moderateScale } from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export default function Recents({data}) {
   const navigation = useNavigation();
@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: horizontalScale(105),
-    height: verticalScale(105),
-    borderRadius:moderateScale(52.5)
+    width: scale(105),
+    height: scale(105),
+    borderRadius: scale(105) / 2,
   },
 });

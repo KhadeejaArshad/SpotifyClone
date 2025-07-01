@@ -22,11 +22,7 @@ import {setupPlayer, addTracks} from '../utils/trackPlayer';
 import {Event} from 'react-native-track-player';
 import {useRef} from 'react';
 import TextCmp from '../UI/SpText';
-import {
-  horizontalScale,
-  verticalScale,
-  moderateScale,
-} from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export default function Play() {
   const [track, setTrack] = useState();
@@ -51,7 +47,6 @@ export default function Play() {
       async event => {
         if (event.nextTrack != null) {
           const nextTrack = await TrackPlayer.getTrack(event.nextTrack);
-          
 
           if (nextTrack) {
             dispatch(setcurTrack(nextTrack.id));
@@ -70,7 +65,7 @@ export default function Play() {
       if (token && id) {
         try {
           const current = await getcurrentTrack(token, id);
-          
+
           dispatch(setcurrAlbum(current?.album?.id));
 
           setTrack(current);
@@ -108,19 +103,23 @@ export default function Play() {
         onPress={() => navigation.navigate('Player')}
         style={styles.flexFill}>
         <View style={styles.row}>
-          <Image
-            style={styles.mImage}
-            source={{uri: track?.album?.images?.[0]?.url}}
-          />
+          <View style={styles.mImage}>
+            <Image
+              style={styles.img}
+              source={{uri: track?.album?.images?.[0]?.url}}
+              resizeMode="cover"
+            />
+          </View>
+
           <View style={styles.desc}>
-            <TextCmp weight="Demi" width={280}>
+            <TextCmp weight="Demi" size={moderateScale(10)}>
               {track?.name}
-              <TextCmp weight="medium" size={12}>
+              <TextCmp weight="medium" size={moderateScale(10)}>
                 {track?.artists?.[0]?.name || 'Unknown Artist'}
               </TextCmp>
             </TextCmp>
             <View style={styles.bluetooth}>
-              <Ionicons name="bluetooth" color="#1DB954" size={12} />
+              <Ionicons name="bluetooth" color="#1DB954" size={moderateScale(12)} />
               <TextCmp size={10} color="#1DB954">
                 BEATSPILL+
               </TextCmp>
@@ -130,7 +129,7 @@ export default function Play() {
       </Pressable>
 
       <View style={styles.icons}>
-        <Ionicons name="bluetooth" color="#1DB954" size={24} />
+        <Ionicons name="bluetooth" color="#1DB954" size={moderateScale(24)} />
         <Pressable
           onPress={async () => {
             const queue = await TrackPlayer.getQueue();
@@ -153,7 +152,7 @@ export default function Play() {
               dispatch(setPlaying(!playing));
             }
           }}>
-          <Ionicons name={playing ? 'pause' : 'play'} color="white" size={30} />
+          <Ionicons name={playing ? 'pause' : 'play'} color="white" size={moderateScale(30)} />
         </Pressable>
       </View>
     </View>
@@ -163,24 +162,28 @@ export default function Play() {
 const styles = StyleSheet.create({
   icons: {
     flexDirection: 'row',
-    gap: 6,
-    marginHorizontal: horizontalScale(8),
+    gap: scale(6),
+    marginHorizontal:scale(8),
   },
   bluetooth: {
     flexDirection: 'row',
-    gap: 4,
+    gap: scale(4),
   },
 
   music: {
     color: 'white',
     fontFamily: fonts.Demi,
-    width: horizontalScale(280),
+    width: scale(280),
   },
 
   mImage: {
-    marginHorizontal: horizontalScale(8),
-    width: horizontalScale(37),
-    height: verticalScale(37),
+    marginHorizontal: scale(8),
+   
+    width: scale(37),
+    height: scale(37),
+  },
+  desc: {
+    flex: 1,
   },
 
   play: {
@@ -190,7 +193,7 @@ const styles = StyleSheet.create({
     height: verticalScale(60),
     alignItems: 'center',
     borderRadius: moderateScale(8),
-    paddingHorizontal: horizontalScale(8),
+    paddingHorizontal: scale(8),
   },
   row: {
     flexDirection: 'row',
@@ -198,10 +201,14 @@ const styles = StyleSheet.create({
   },
   icons: {
     flexDirection: 'row',
-    gap: 6,
+    gap: scale(6),
     alignItems: 'center',
   },
   flexFill: {
     flex: 1,
+  },
+  img: {
+    width: '100%',
+    height: '100%',
   },
 });

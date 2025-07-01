@@ -6,6 +6,7 @@ import {
   View,
   SafeAreaView,
   ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import React, {use, useEffect} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -24,7 +25,7 @@ import TextCmp from '../UI/SpText';
 import {
   verticalScale,
   moderateScale,
-  horizontalScale,
+  scale,
 } from '../utils/fonts/fonts';
 import {
   fetchLiked,
@@ -98,14 +99,15 @@ export default function Player({navigation}) {
   }
 
   return (
-    <LinearGradient
+  <ScrollView >
+      <LinearGradient
       colors={['#962419', '#661710', '#430E09']}
       style={styles.linearGradient}>
       <View style={styles.header}>
         <Pressable onPress={() => navigation.goBack()}>
           <AntDesign
             name="down"
-            size={20}
+            size={moderateScale(20)}
             color="white"
             style={{marginHorizontal: 8}}
           />
@@ -116,15 +118,17 @@ export default function Player({navigation}) {
         </TextCmp>
         <AntDesign
           name="ellipsis"
-          size={36}
+          size={moderateScale(36)}
           color="white"
-          style={{marginHorizontal: 8}}
+          style={{marginHorizontal: scale(8)}}
         />
       </View>
-      <Image
-        style={styles.mainImage}
+    <View  style={styles.mainImage}>
+        <Image
+        style={styles.img}
         source={{uri: track?.album?.images?.[0]?.url}}
       />
+    </View>
       <View>
         <TextCmp size={20} weight="Demi" marginT={30}>
           {track?.name}
@@ -198,12 +202,12 @@ export default function Player({navigation}) {
         </View>
       </View>
       <View style={styles.playcontainer}>
-        <Ionicons name="shuffle" color="white" size={24} />
+        <Ionicons name="shuffle" color="white" size={moderateScale(24)} />
         <View style={styles.playing}>
           <Ionicons
             name="play-skip-back"
             color="white"
-            size={30}
+            size={moderateScale(30)}
             style={styles.icon}
             onPress={async () => {
               try {
@@ -228,14 +232,14 @@ export default function Player({navigation}) {
             <Ionicons
               name={playing ? 'pause-circle' : 'play-circle'}
               color="white"
-              size={76}
+              size={moderateScale(76)}
             />
           </Pressable>
 
           <Ionicons
             name="play-skip-forward"
             color="white"
-            size={30}
+            size={moderateScale(30)}
             style={styles.icon}
             onPress={async () => {
               try {
@@ -255,15 +259,15 @@ export default function Player({navigation}) {
           <AntDesign
             name="retweet"
             color={replay ? '#1ED760' : 'white'}
-            size={24}
+            size={moderateScale(24)}
           />
         </Pressable>
       </View>
 
       <View style={styles.bottom}>
         <View style={styles.bluetooth}>
-          <Ionicons name="bluetooth" color="#1ED760" />
-          <TextCmp color="#1ED760" size={11}>
+          <Ionicons name="bluetooth" color="#1ED760" size={moderateScale(11)} />
+          <TextCmp color="#1ED760" size={moderateScale(11)}>
             BEATSPILL+
           </TextCmp>
         </View>
@@ -271,26 +275,29 @@ export default function Player({navigation}) {
           <Ionicons
             name="share-outline"
             color="white"
-            size={24}
+            size={moderateScale(24)}
             style={styles.icon}
           />
           <AntDesign
             name="menu-fold"
             color="white"
-            size={24}
+            size={moderateScale(24)}
             style={styles.icon}
           />
         </View>
       </View>
     </LinearGradient>
+  </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
-    paddingLeft: 15,
-    paddingRight: 15,
-    borderRadius: 5,
+   
+    paddingLeft: scale(15),
+    paddingRight: scale(15),
+    borderRadius: moderateScale(5),
+    paddingBottom:verticalScale(20)
   },
   header: {
     flexDirection: 'row',
@@ -317,7 +324,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   icon: {
-    marginHorizontal: horizontalScale(10),
+    marginHorizontal: scale(10),
   },
 
   bluetooth: {
@@ -333,13 +340,19 @@ const styles = StyleSheet.create({
   },
   bluename: {
     color: '#1ED760',
-    fontSize: 11,
+    fontSize: moderateScale(11),
     fontFamily: fonts.regular,
   },
-  mainImage: {
-    width: horizontalScale(380),
-    height: verticalScale(380),
-  },
+mainImage: {
+  width: '100%',
+  alignItems: 'center',
+  marginVertical: verticalScale(20),
+},
+img: {
+  width: scale(380),
+  height: scale(380),
+  borderRadius: moderateScale(12),
+},
   duration: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -348,7 +361,8 @@ const styles = StyleSheet.create({
     color: '#B3B3B3',
   },
   heart: {
-    width: horizontalScale(30),
-    height: verticalScale(60),
+    width: scale(30),
+    height: scale(60),
   },
+
 });

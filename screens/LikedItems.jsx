@@ -5,11 +5,7 @@ import {fetchSavedSongs, playLiked} from '../utils/http';
 import TextCmp from '../UI/SpText';
 import {images} from '../assets/image';
 import AntDesign from '@react-native-vector-icons/ant-design';
-import {
-  moderateScale,
-  horizontalScale,
-  verticalScale,
-} from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import LinearGradient from 'react-native-linear-gradient';
 import Play from '../components/Play';
 
@@ -193,9 +189,9 @@ if (loading || !song) {
       <View style={styles.header}>
         <AntDesign
           name="left"
-          size={20}
+          size={moderateScale(20)}
           color="white"
-          style={{marginHorizontal: 24}}
+          style={{marginHorizontal: scale(24)}}
           onPress={() => navigation.navigate('Library')}
         />
         <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
@@ -231,7 +227,7 @@ if (loading || !song) {
                 playing && source === 'liked' ? 'pause-circle' : 'play-circle'
               }
               color="#1ED760"
-              size={76}
+              size={moderateScale(76)}
             />
           </Pressable>
         </Animated.View>
@@ -264,7 +260,7 @@ if (loading || !song) {
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
-                    marginVertical: 8,
+                    marginVertical: verticalScale(8),
                   }}>
                   <TextCmp weight="Demi" size={25} marginH={8} marginV={8}>
                     LikedSongs
@@ -294,7 +290,7 @@ if (loading || !song) {
                           : 'play-circle'
                       }
                       color="#1ED760"
-                      size={76}
+                      size={moderateScale(76)}
                     />
                   </Pressable>
                 </View>
@@ -318,9 +314,9 @@ if (loading || !song) {
                   <Image source={images.download} />
                   <AntDesign
                     name="ellipsis"
-                    size={24}
+                    size={moderateScale(24)}
                     color="white"
-                    style={{marginHorizontal: 8}}
+                    style={{marginHorizontal: scale(8)}}
                   />
                 </View>
               </>
@@ -348,29 +344,29 @@ const styles = StyleSheet.create({
   },
   trackdesc: {
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(12),
-    gap: 8,
+    marginHorizontal: scale(12),
+    gap: scale(8),
   },
   track: {
     flexDirection: 'row',
     // justifyContent: 'space-between',
   },
   images: {
-    width: horizontalScale(60),
-    height: verticalScale(60),
+    width: scale(60),
+    height: scale(60),
     borderRadius: moderateScale(4),
-    marginRight: horizontalScale(12),
+    marginRight: scale(12),
   },
   desccard: {
     flex: 1,
   },
   dicon: {
-    width: horizontalScale(16),
-    height: verticalScale(16),
+    width: scale(16),
+    height: scale(16),
   },
   trackdesc: {
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(12),
+    marginHorizontal: scale(12),
     gap: 8,
     alignItems: 'center',
   },
@@ -393,7 +389,7 @@ const styles = StyleSheet.create({
   iconcontainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: scale(12),
     marginTop: verticalScale(-40),
   },
   mainimage: {

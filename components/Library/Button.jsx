@@ -1,6 +1,6 @@
 import { StyleSheet,View,Text,Pressable } from "react-native";
 import TextCmp from "../../UI/SpText";
-import { verticalScale,moderateScale,horizontalScale } from "../../utils/fonts/fonts";
+import { verticalScale,moderateScale,scale } from "../../utils/fonts/fonts";
 export default function LibButton({children, onPress, active = false}) {
   return (
     <View style={[
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     
     borderRadius: moderateScale(24),
     paddingVertical: verticalScale(10),
-    paddingHorizontal: horizontalScale(20),
+    paddingHorizontal: scale(20),
     alignItems: 'center',
     justifyContent: 'center',
   },

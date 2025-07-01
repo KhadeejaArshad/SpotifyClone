@@ -19,7 +19,7 @@ import {fetchPlaylist} from '../utils/http';
 import {
   verticalScale,
   moderateScale,
-  horizontalScale,
+  scale,
 } from '../utils/fonts/fonts';
 
 

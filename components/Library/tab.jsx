@@ -3,7 +3,7 @@ import React from 'react';
 import AntDesign from '@react-native-vector-icons/ant-design';
 
 import TextCmp from '../../UI/SpText';
-import { verticalScale,moderateScale,horizontalScale } from '../../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export default function UpperTab() {
   return (
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: verticalScale(16),
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
 
 });

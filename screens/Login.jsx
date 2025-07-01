@@ -8,7 +8,7 @@ import { loginToSpotify } from '../utils/auth/auth';
 import { isAuthenticate, setExpireTime, setRefreshToken, setUserId } from '../store/authenticate';
 import { ScrollView } from 'react-native-gesture-handler';
 import TextCmp from '../UI/SpText';
-import { verticalScale,horizontalScale,moderateScale } from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 
 
@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(24),
     paddingTop: verticalScale(10),
     paddingBottom: verticalScale(10),
-    marginHorizontal:horizontalScale(16),
-    marginVertical:horizontalScale(10),
+    marginHorizontal:scale(16),
+    marginVertical:scale(10),
    
     alignItems: 'center',
     justifyContent: 'center',

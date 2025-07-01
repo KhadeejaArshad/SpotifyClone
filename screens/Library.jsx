@@ -5,7 +5,7 @@ import {fetchMyAlbum, fetchMyArtist, fetchMyPlayist,fetchSavedSongs} from '../ut
 import LibButton from '../components/Library/Button';
 import Play from '../components/Play';
 import List from '../components/Library/List';
-import { horizontalScale,verticalScale,moderateScale } from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
@@ -104,7 +104,11 @@ const Library = () => {
         </View>
       )}
 
-      {id && <Play />}
+           {id && (
+              <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                <Play />
+              </View>
+            )}
     </View>
   );
 };
@@ -113,11 +117,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#111111',
+    padding:moderateScale(10)
 
   },
   buttoncontainer: {
     flexDirection: 'row',
-    gap: 10,
+    gap: scale(10),
     marginBottom: verticalScale(16),
     flexWrap: 'wrap',
   },
@@ -131,7 +136,7 @@ const styles = StyleSheet.create({
   },
   debugText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     opacity: 0.7,
   },
 });

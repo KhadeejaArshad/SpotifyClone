@@ -25,7 +25,7 @@ import {fetchArtist, fetchArtistTrack, fetchPlaylist} from '../utils/http';
 import TextCmp from '../UI/SpText';
 import {
   verticalScale,
-  horizontalScale,
+  scale,
   moderateScale,
 } from '../utils/fonts/fonts';
 export default function ArtistView({route, navigation}) {
@@ -42,12 +42,12 @@ export default function ArtistView({route, navigation}) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const imageScale = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [236, 70],
+    inputRange: [verticalScale(0), verticalScale(100)],
+    outputRange: [verticalScale(236), verticalScale(70)],
     extrapolate: 'clamp',
   });
   const titleOpacity = scrollY.interpolate({
-    inputRange: [100, 200],
+    inputRange: [verticalScale(100), verticalScale(200)],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
@@ -100,7 +100,7 @@ export default function ArtistView({route, navigation}) {
             </View>
           </View>
 
-          <AntDesign name="ellipsis" size={24} color="white" />
+          <AntDesign name="ellipsis" size={moderateScale(24)} color="white" />
         </View>
       </Pressable>
     );
@@ -149,9 +149,9 @@ export default function ArtistView({route, navigation}) {
       <View style={styles.header}>
         <AntDesign
           name="left"
-          size={20}
+          size={moderateScale(20)}
           color="white"
-          style={{marginHorizontal: 24}}
+          style={{marginHorizontal: scale(24)}}
           onPress={() => navigation.goBack()}
         />
          <TextCmp size={18} weight="Demi" opacity={titleOpacity} animated={true}>
@@ -173,10 +173,10 @@ export default function ArtistView({route, navigation}) {
             <>
               <View style={styles.imageContainer}>
                 <Animated.View
-                  style={[
-                    styles.imageContainer,
-                    {width: imageScale, height: imageScale},
-                  ]}>
+                  style={
+                 
+                    {width: imageScale, height: imageScale}
+                  }>
                   {playlist?.images && (
                     <Image
                       style={styles.images}
@@ -225,15 +225,15 @@ export default function ArtistView({route, navigation}) {
                             ? require('../assets/Images/Player/like.png')
                             : require('../assets/Images/Player/unlike.png')
                         }
-                        style={[styles.icon]}
+                        style={styles.icon}
                       />
                     </Pressable>
-                    <Image source={images.download} />
+                    <Image source={images.download}  style={styles.dicon}/>
                     <AntDesign
                       name="ellipsis"
-                      size={24}
+                      size={moderateScale(24)}
                       color="white"
-                      style={{marginHorizontal: 8}}
+                      style={{marginHorizontal: scale(8)}}
                     />
                   </View>
                 </>
@@ -270,14 +270,14 @@ const styles = StyleSheet.create({
   albumdesc: {
     color: 'white',
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(8),
-    gap: 12,
+    marginHorizontal: scale(8),
+    gap: scale(12),
   },
 
   iconcontainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: scale(12),
     marginTop: verticalScale(-5),
   },
   albuminfo: {
@@ -286,12 +286,12 @@ const styles = StyleSheet.create({
   something: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
   trackdesc: {
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(12),
-    gap: 8,
+    marginHorizontal: scale(12),
+    gap: scale(8),
     alignItems: 'center',
   },
 
@@ -302,8 +302,9 @@ const styles = StyleSheet.create({
   },
 
   dicon: {
-    width: horizontalScale(16),
-    height: verticalScale(16),
+    width: scale(16),
+    height: scale(16),
+   
   },
   card: {
     flexDirection: 'row',
@@ -313,18 +314,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   artistimage: {
-    width: horizontalScale(23),
-    height: verticalScale(23),
-    borderRadius: moderateScale(12),
+    width: scale(23),
+    height: scale(23),
+    borderRadius: scale(12),
   },
   artistdesc: {
     flexDirection: 'row',
   },
   albumImage: {
-    width: horizontalScale(60),
-    height: verticalScale(60),
+    width: scale(60),
+    height: scale(60),
     borderRadius: moderateScale(4),
-    marginRight: horizontalScale(12),
+    marginRight: scale(12),
   },
   desccard: {
     flex: 1,
@@ -334,4 +335,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  icon:{
+    width:scale(50),
+    height:scale(50)
+  }
+
 });

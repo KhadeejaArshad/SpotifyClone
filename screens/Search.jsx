@@ -17,7 +17,7 @@ import {fonts} from '../utils/fonts';
 import {useDispatch} from 'react-redux';
 import { useSelector } from 'react-redux';
 import SearchModal from '../components/Serach/SearchModal';
-import { verticalScale,moderateScale,horizontalScale } from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Search = () => {
           setModalVisible(true);
         }}>
         <View style={styles.search}>
-          <Ionicons style={styles.icon} name="search" color="black" size={25} />
+          <Ionicons style={styles.icon} name="search" color="black" size={moderateScale(25)} />
 
           <TextInput
             style={styles.input}
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     borderRadius: moderateScale(8),
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
     height: verticalScale(46),
   },
   input: {
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     borderRadius: moderateScale(10),
   },
   icon: {
-    marginHorizontal: horizontalScale(10),
+    marginHorizontal: scale(10),
   },
   modalContent: {
     flexDirection: 'row',
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#282828',
     borderRadius: moderateScale(12),
     height: verticalScale(40),
-    width: horizontalScale(350),
+    width: scale(350),
   },
   searchbar: {
     flexDirection: 'row',
@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
   },
   icon: {
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
   cancel: {
     color: 'white',
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
     fontFamily: fonts.medium,
   },
   heading: {
@@ -113,21 +113,21 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
   },
   image: {
-    width: horizontalScale(50),
-    height: verticalScale(50),
+    width: scale(50),
+    height: scale(50),
     borderRadius: moderateScale(25),
   },
   card: {
-    padding: 10,
+    padding: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: scale(12),
   },
   modalInput: {
     color: 'white',
   },
   desc: {
     flexDirection: 'row',
-    gap: 4,
+    gap: scale(4),
   },
 });

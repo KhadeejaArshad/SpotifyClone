@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import TextCmp from '../../UI/SpText';
 import {
   verticalScale,
-  horizontalScale,
+  scale,
   moderateScale,
 } from '../../utils/fonts/fonts';
 
@@ -81,10 +81,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginVertical: verticalScale(16),
     alignItems: 'center',
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
   desc: {
-    marginHorizontal: horizontalScale(10),
+    marginHorizontal: scale(10),
   },
 
   icon: {
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
   },
   image: {
-    width: horizontalScale(65),
-    height: verticalScale(65),
+    width: scale(65),
+    height: scale(65),
   },
 });

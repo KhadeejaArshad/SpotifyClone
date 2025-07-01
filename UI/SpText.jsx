@@ -1,10 +1,6 @@
 import {StyleSheet, Text as SpText, Animated} from 'react-native';
 import {fonts} from '../utils/fonts';
-import {
-  verticalScale,
-  horizontalScale,
-  moderateScale,
-} from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const AnimatedSpText = Animated.createAnimatedComponent(SpText);
 const TextCmp = ({
@@ -29,11 +25,11 @@ const TextCmp = ({
   if(opacity) styleArray.push({opacity:opacity})
   if (marginH !== undefined || marginV !== undefined) {
     styleArray.push({
-      marginHorizontal: horizontalScale(marginH || 0),
+      marginHorizontal: scale(marginH || 0),
       marginVertical: verticalScale(marginV || 0),
     });
   }
-  if (width !== undefined) styleArray.push({width});
+  if (width !== undefined) styleArray.push({width:scale(width)});
   if (marginT !== undefined)
     styleArray.push({marginTop: verticalScale(marginT)});
 

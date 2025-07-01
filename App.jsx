@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import { navigationRef } from './utils/Navigationservice';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 import AntDesign from '@react-native-vector-icons/ant-design';
 
@@ -52,7 +52,7 @@ function AuthenticatedStack() {
             <AntDesign
               name="down"
               size={24}
-              style={{marginHorizontal: 8}}
+              style={{marginHorizontal: scale(8)}}
               onPress={() => navigation.goBack()}
             />
           ),
@@ -60,7 +60,7 @@ function AuthenticatedStack() {
             <AntDesign
               name="ellipsis"
               size={24}
-              style={{marginHorizontal: 8}}
+              style={{marginHorizontal: scale(8)}}
             />
           ),
         })}

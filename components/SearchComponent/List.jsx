@@ -2,7 +2,7 @@ import {StyleSheet, Text, View, SectionList, Image} from 'react-native';
 import React, { useEffect, useState } from 'react';
 
 import TextCmp from '../../UI/SpText';
-import { verticalScale,horizontalScale,moderateScale } from '../../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { fetchCategories } from '../../utils/http';
 import { useSelector } from 'react-redux';
 import { FlatList } from 'react-native-gesture-handler';
@@ -61,7 +61,7 @@ const renderItem = ({ item }) => {
       keyExtractor={(item) => item.id}
       numColumns={2}
       
-      contentContainerStyle={{ paddingHorizontal: 10, paddingTop: 20 }}
+      contentContainerStyle={{ paddingHorizontal: scale(10), paddingTop: verticalScale(20) }}
       showsVerticalScrollIndicator={false}
     />
 
@@ -109,15 +109,15 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: horizontalScale(12),
+    paddingHorizontal: scale(12),
     marginBottom: verticalScale(12),
   },
   item: {
     flex: 1,
-    marginHorizontal: horizontalScale(6),
-    width: horizontalScale(192),
-    height: verticalScale(109),
-    borderRadius: moderateScale(4),
+    marginHorizontal: scale(6),
+    width: scale(192),
+    height: scale(109),
+    borderRadius: scale(192)/2,
     flexDirection: 'row',
     justifyContent: 'space-between',
     overflow:'hidden',
@@ -127,9 +127,9 @@ const styles = StyleSheet.create({
 
   image:{
     marginVertical:verticalScale(55),
-    marginHorizontal:horizontalScale(-9),
-    width:65,
-    height:65,
+    marginHorizontal:scale(-9),
+    width:scale(65),
+    height:scale(65),
     transform:[{rotate:'20deg'}]
   }
 });

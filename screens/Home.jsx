@@ -14,6 +14,7 @@ import {useEffect, useState} from 'react';
 import {setupPlayer} from '../utils/trackPlayer';
 import { fetchTrack } from '../utils/http';
  import { fetchRecentlyPlayedAlbums,fetchRecentlyPlayedArtists } from '../utils/http';
+import { moderateScale } from 'react-native-size-matters';
 
 function Home() {
   const id = useSelector(state => state.player.currentTrack);
@@ -73,7 +74,11 @@ function Home() {
         <Wrap data={wraps} />
         <Editors data={editors} />
       </ScrollView>
-      {id && <Play />}
+        {id && (
+              <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+                < Play/>
+              </View>
+            )}
     </View>
   );
 }
@@ -84,6 +89,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#111111',
+    padding:moderateScale(10)
   },
    emptyState: {
     flex: 1,

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View,Image,Pressable } from 'react-native'
 import React from 'react'
 import { fonts } from '../../utils/fonts'
 import TextCmp from '../../UI/SpText'
-import { verticalScale,horizontalScale,moderateScale } from '../../utils/fonts/fonts'
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export default function LoginButoon({text,image}) {
   return (
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
       paddingVertical: verticalScale(14),
     
       marginVertical: verticalScale(10),
-      marginHorizontal: horizontalScale(20),
+      marginHorizontal: scale(20),
       position: 'relative', 
     },
     icon: {

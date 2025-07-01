@@ -30,11 +30,7 @@ import {playLiked} from '../../utils/http';
 import {useFocusEffect} from '@react-navigation/native';
 import {playAlbum, playPlaylist} from '../../utils/http';
 import LinearGradient from 'react-native-linear-gradient';
-import {
-  verticalScale,
-  moderateScale,
-  horizontalScale,
-} from '../../utils/fonts/fonts';
+import { verticalScale,scale,moderateScale } from 'react-native-size-matters';
 const MediaView = ({data, type, artist,colors}) => {
   const [pressed, setPressed] = useState(false);
 
@@ -57,24 +53,24 @@ const MediaView = ({data, type, artist,colors}) => {
   console.log('bndghng', data);
 
   const imageScale = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [236, 70],
+    inputRange: [verticalScale(0), verticalScale(100)],
+    outputRange: [verticalScale(236), verticalScale(70)],
     extrapolate: 'clamp',
   });
   const titleOpacity = scrollY.interpolate({
-    inputRange: [100, 200],
+    inputRange: [verticalScale(100), verticalScale(200)],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
   const iconOpacity = scrollY.interpolate({
-    inputRange: [250, 300],
+    inputRange: [verticalScale(250), verticalScale(300)],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
 
   const stickyIconTranslateY = scrollY.interpolate({
-    inputRange: [250, 300],
-    outputRange: [30, 30],
+    inputRange: [verticalScale(250), verticalScale(300)],
+    outputRange: [verticalScale(30), verticalScale(30)],
     extrapolate: 'clamp',
   });
   function getYear(date) {
@@ -222,7 +218,7 @@ const MediaView = ({data, type, artist,colors}) => {
       <View style={styles.header}>
         <AntDesign
           name="left"
-          size={20}
+          size={moderateScale(20)}
           color="white"
           style={{marginHorizontal: 24}}
           onPress={() => {
@@ -262,11 +258,11 @@ const MediaView = ({data, type, artist,colors}) => {
             <Ionicons
               name={
                 (playing && isCurrentMedia) || source === 'liked'
-                  ? 'play-circle'
-                  : 'pause-circle'
+                  ? 'pause-circle'
+                  : 'play-circle'
               }
               color="#1ED760"
-              size={76}
+              size={moderateScale(76)}
             />
           </Pressable>
         </Animated.View>
@@ -355,7 +351,7 @@ const MediaView = ({data, type, artist,colors}) => {
                             : 'play-circle'
                         }
                         color="#1ED760"
-                        size={76}
+                        size={moderateScale(76)}
                       />
                     </Pressable>
                   </Animated.View>
@@ -380,7 +376,7 @@ const MediaView = ({data, type, artist,colors}) => {
                   <Image source={images.download} />
                   <AntDesign
                     name="ellipsis"
-                    size={24}
+                    size={moderateScale(24)}
                     color="white"
                     style={{marginHorizontal: 8}}
                   />
@@ -423,14 +419,14 @@ const styles = StyleSheet.create({
   albumdesc: {
     color: 'white',
     flexDirection: 'row',
-    marginHorizontal: 8,
-    gap: 12,
+    marginHorizontal: scale(8),
+    gap: scale(12),
   },
 
   iconcontainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: scale(12),
     marginTop: verticalScale(5),
   },
   albuminfo: {
@@ -439,12 +435,12 @@ const styles = StyleSheet.create({
   something: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
   trackdesc: {
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(12),
-    gap: 8,
+    marginHorizontal: scale(12),
+    gap: scale(8),
     alignItems: 'center',
   },
   track: {
@@ -453,16 +449,16 @@ const styles = StyleSheet.create({
   },
 
   dicon: {
-    width: horizontalScale(16),
-    height: verticalScale(16),
+    width: scale(16),
+    height:scale(16),
   },
   card: {
     marginVertical: verticalScale(8),
   },
   artistimage: {
-    width: horizontalScale(23),
-    height: verticalScale(23),
-    borderRadius: moderateScale(12),
+    width: scale(23),
+    height: scale(23),
+    borderRadius: scale(23)/2,
   },
   artistdesc: {
     flexDirection: 'row',

@@ -7,7 +7,8 @@ import Ionicons from '@react-native-vector-icons/ionicons';
 import { useDispatch } from 'react-redux';
 import { logout } from '../store/authenticate';
 import { setcurTrack } from '../store/track';
-import TrackPlayer from 'react-native-track-player';
+import { moderateScale } from 'react-native-size-matters';
+
 
 
 export default function HeaderIcons({ tintColor }) {
@@ -22,11 +23,11 @@ export default function HeaderIcons({ tintColor }) {
 
   return (
     <View style={styles.container}>
-      <AntDesign name='bell' color={tintColor} size={20} />
-      <Ionicons name='reload' color={tintColor} size={20} />
-      <AntDesign name='setting' color={tintColor} size={20} />
+      <AntDesign name='bell' color={tintColor} size={moderateScale(20)} />
+      <Ionicons name='reload' color={tintColor} size={moderateScale(20)} />
+      <AntDesign name='setting' color={tintColor} size={moderateScale(20)} />
       <Pressable onPress={handleLogout}>
-        <AntDesign name='logout' color={tintColor} size={20} />
+        <AntDesign name='logout' color={tintColor} size={moderateScale(20)} />
       </Pressable>
     </View>
   );

@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux';
 import {useNavigation} from '@react-navigation/native';
 import TextCmp from '../UI/SpText';
 
-import { verticalScale,horizontalScale } from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 
 
@@ -42,7 +42,7 @@ export default function Wrap({data}) {
   return (
     <>
       <View style={styles.wrapcontainer}>
-        <Image style={styles.wImage} source={images.wrap1} />
+        <Image style={styles.wImage} source={images.wrap1}  />
         <View>
           <TextCmp size={12} marginV={3}>#SPOTIFYWRAPPED</TextCmp>
           <TextCmp size={22} weight="bold" marginH={4} marginV={6}>
@@ -69,26 +69,24 @@ export default function Wrap({data}) {
 const styles = StyleSheet.create({
   screen: {
     flexDirection: 'row',
-    gap: 14,
+    gap: scale(14),
   },
   wrapcontainer: {
     flexDirection: 'row',
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
  
     marginVertical: verticalScale(20),
    
   },
   wImage: {
-    marginHorizontal: horizontalScale(4),
+    marginHorizontal: scale(4),
+    width:scale(58),
+    height:scale(58)
   },
  
   image: {
-    width: horizontalScale(154),
-    height: verticalScale(154),
+    width: scale(154),
+    height: scale(154),
   },
-  item:{
-    
-     height:200,
-     
-  }
+
 });

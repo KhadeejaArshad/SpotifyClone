@@ -14,7 +14,7 @@ import {fetchTrack} from '../utils/http';
 import {useDispatch, useSelector} from 'react-redux';
 import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
-import {verticalScale, horizontalScale} from '../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 import TextCmp from '../UI/SpText';
 import {setcurrAlbum, setcurTrack} from '../store/track';
@@ -61,7 +61,7 @@ export default function Editors({data}) {
         horizontal
         showsHorizontalScrollIndicator={false}
         ItemSeparatorComponent={() => (
-          <View style={{width: horizontalScale(4)}} />
+          <View style={{width: scale(4)}} />
         )}
       />
     </View>
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     fontFamily: fonts.regular,
   },
   item: {
-    width: horizontalScale(150),
+    width: scale(150),
     marginVertical: 0,
   },
 
@@ -93,10 +93,10 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: fonts.Demi,
     marginVertical: verticalScale(8),
-    marginHorizontal: horizontalScale(10),
+    marginHorizontal: scale(10),
   },
   image: {
-    width: horizontalScale(150),
-    height: verticalScale(150),
+    width: scale(150),
+    height: scale(150),
   },
 });

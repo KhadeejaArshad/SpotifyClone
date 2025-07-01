@@ -17,7 +17,7 @@ import { useNavigation } from '@react-navigation/native';
 import { searchSpotify } from '../../utils/http';
 import { setcurTrack } from '../../store/track';
 import TextCmp from '../../UI/SpText';
-import { verticalScale,horizontalScale,moderateScale } from '../../utils/fonts/fonts';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 export default function SearchModal({visible ,setVisible}) {
     const dispatch=useDispatch();
@@ -69,7 +69,7 @@ export default function SearchModal({visible ,setVisible}) {
     <View>
       <TextCmp>{item.name}</TextCmp>
       <View style={styles.desc}>
-        <View style={{backgroundColor:'gray', width:13, height:13, borderRadius:2, alignItems:'center'}}>
+        <View style={{backgroundColor:'gray', width:scale(13), height:scale(13), borderRadius:moderateScale(2), alignItems:'center'}}>
           <TextCmp size={10} weight='Demi'>E</TextCmp>
         </View>
         <TextCmp size={12} color='grey'>Song.</TextCmp>
@@ -123,7 +123,7 @@ const ArtistCard = ({ item }) => (
 <Pressable onPress={()=>navigation.navigate('ArtistView',{id:item.id})}>
     <View style={styles.card}>
     <Image
-      style={[styles.image, { borderRadius: 999 }]}
+      style={[styles.image, { borderRadius: moderateScale(999) }]}
       source={{ uri: item?.images?.[0]?.url }}
     />
     <View>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#282828',
     borderRadius: moderateScale(12),
     height: verticalScale(40),
-    width: horizontalScale(350),
+    width: scale(350),
   },
   searchbar: {
     flexDirection: 'row',
@@ -196,26 +196,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#111111',
   },
   icon: {
-    marginHorizontal: horizontalScale(8),
+    marginHorizontal: scale(8),
   },
   
 
   image: {
-    width: horizontalScale(50),
-    height: verticalScale(50),
-    borderRadius: moderateScale(25),
+    width: scale(50),
+    height: scale(50),
+    borderRadius:  scale(50)/2,
   },
   card: {
     padding: moderateScale(10),
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: scale(12),
   },
   modalInput: {
     color: 'white',
   },
   desc: {
     flexDirection: 'row',
-    gap: 4,
+    gap: scale(4),
   },
 });
