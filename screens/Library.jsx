@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#111111',
-    padding:moderateScale(10)
+   
 
   },
   buttoncontainer: {

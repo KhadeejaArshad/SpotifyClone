@@ -179,8 +179,8 @@ const styles = StyleSheet.create({
   mImage: {
     marginHorizontal: scale(8),
    
-    width: scale(37),
-    height: scale(37),
+    width: scale(40),
+    height: scale(40),
   },
   desc: {
     flex: 1,
@@ -190,10 +190,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#550A1C',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: verticalScale(60),
+   
+    height: verticalScale(59),
     alignItems: 'center',
     borderRadius: moderateScale(8),
-    paddingHorizontal: scale(8),
+    // paddingHorizontal: scale(8),
   },
   row: {
     flexDirection: 'row',

@@ -39,7 +39,7 @@ export default function Login() {
           <TextCmp color='black' alignment='center' weight='Demi' size={16} >Sign Up for free</TextCmp>
         </View>
       </Pressable>
-      <LoginButoon image={images.google} style={styles.icon} text={'Continue with Google'}/>
+      <LoginButoon image={images.google}  text={'Continue with Google'}/>
       <LoginButoon image={images.facebook} text={'Continue with Facebook'}/>
       <LoginButoon image={images.apple} text={'Continue with Apple'}/>
      
@@ -82,11 +82,9 @@ const styles = StyleSheet.create({
  
   },
   img:{
-    width:scale(550),
-    height:scale(550)
-  },icon:{
-    width:scale(30),
-    height:scale(30)
+    width:scale(380),
+    height:scale(465)
+    
   }
 
 

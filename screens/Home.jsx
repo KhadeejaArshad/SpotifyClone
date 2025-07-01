@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#111111',
-    padding:moderateScale(10)
+    
   },
    emptyState: {
     flex: 1,
