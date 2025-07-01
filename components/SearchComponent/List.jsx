@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(6),
     width: scale(192),
     height: scale(109),
-    borderRadius: scale(192)/2,
+    borderRadius: moderateScale(4),
     flexDirection: 'row',
     justifyContent: 'space-between',
     overflow:'hidden',

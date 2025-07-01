@@ -32,5 +32,7 @@ const styles = StyleSheet.create({
     icon: {
       position: 'absolute',
       left: verticalScale(26),
+      width:scale(22),
+      height:scale(22)
     },
 })

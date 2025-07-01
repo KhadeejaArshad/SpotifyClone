@@ -17,7 +17,7 @@ import {useTrackPlayerEvents, Event} from 'react-native-track-player';
 import {useRef} from 'react';
 import {Animated} from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
-import MediaView from '../components/View/View';
+
 export default function LikedItems({navigation, route}) {
   const token = useSelector(state => state.auth.token);
   const trackid = useSelector(state => state.player.currentTrack);
@@ -33,24 +33,24 @@ export default function LikedItems({navigation, route}) {
   const scrollY = useRef(new Animated.Value(0)).current;
 
   const imageScale = scrollY.interpolate({
-    inputRange: [0, 100],
-    outputRange: [236, 70],
+    inputRange: [verticalScale(0), verticalScale(100)],
+    outputRange: [verticalScale(236), verticalScale(70)],
     extrapolate: 'clamp',
   });
   const titleOpacity = scrollY.interpolate({
-    inputRange: [100, 200],
+    inputRange: [verticalScale(100), verticalScale(200)],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
   const iconOpacity = scrollY.interpolate({
-    inputRange: [250, 300],
+    inputRange: [verticalScale(250), verticalScale(300)],
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
 
   const stickyIconTranslateY = scrollY.interpolate({
-    inputRange: [250, 300],
-    outputRange: [0, 30],
+    inputRange: [verticalScale(250), verticalScale(300)],
+    outputRange: [verticalScale(30), verticalScale(30)],
     extrapolate: 'clamp',
   });
 
@@ -324,17 +324,17 @@ if (loading || !song) {
           }
         />
       </View>
-      <View>{trackid && <Play />}</View>
+          {trackid && (
+             <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0 }}>
+               <Play />
+             </View>
+           )}
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  // container:{
-  //    backgroundColor: '#111111',
-  //     flex:1,
 
-  // },
   card: {
     flexDirection: 'row',
     alignItems: 'center',

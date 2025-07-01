@@ -23,11 +23,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import {fetchArtist, fetchArtistTrack, fetchPlaylist} from '../utils/http';
 import TextCmp from '../UI/SpText';
-import {
-  verticalScale,
-  scale,
-  moderateScale,
-} from '../utils/fonts/fonts';
+import { moderateScale,verticalScale,scale } from 'react-native-size-matters';
 export default function ArtistView({route, navigation}) {
   const [pressed, setPressed] = useState(false);
   const [playlist, setPlaylist] = useState(null);

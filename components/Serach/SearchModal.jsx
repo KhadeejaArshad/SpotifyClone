@@ -179,17 +179,21 @@ const styles = StyleSheet.create({
   modalContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: scale(4),
     backgroundColor: '#282828',
     borderRadius: moderateScale(12),
     height: verticalScale(40),
-    width: scale(350),
+    width: '90%',
+    fontSize:moderateScale(28)
+   
+    
   },
   searchbar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: verticalScale(8),
+    marginHorizontal:scale(13)
   },
   modal: {
     flex: 1,

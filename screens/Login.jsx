@@ -29,7 +29,7 @@ export default function Login() {
 
   return (
     <ScrollView style={styles.root}>
-      <Image source={images.login} />
+      <Image source={images.login} style={styles.img} />
     <View style={styles.textcontainer}>
         <TextCmp weight='bold' size={28} marginV={4}>Millions of Songs.</TextCmp>
       <TextCmp  weight='bold' size={28} marginV={4}>Free on Spotify.</TextCmp>
@@ -39,7 +39,7 @@ export default function Login() {
           <TextCmp color='black' alignment='center' weight='Demi' size={16} >Sign Up for free</TextCmp>
         </View>
       </Pressable>
-      <LoginButoon image={images.google} text={'Continue with Google'}/>
+      <LoginButoon image={images.google} style={styles.icon} text={'Continue with Google'}/>
       <LoginButoon image={images.facebook} text={'Continue with Facebook'}/>
       <LoginButoon image={images.apple} text={'Continue with Apple'}/>
      
@@ -58,6 +58,7 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
     backgroundColor: '#111111',
+    paddingBottom:verticalScale(80)
   },
   buttonOuterContainer: {
     backgroundColor: '#1ED760',
@@ -80,6 +81,13 @@ const styles = StyleSheet.create({
 
  
   },
+  img:{
+    width:scale(550),
+    height:scale(550)
+  },icon:{
+    width:scale(30),
+    height:scale(30)
+  }
 
 
 });
