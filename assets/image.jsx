@@ -27,7 +27,8 @@ export const images = {
   download:require('../assets/Images/AlbumView/M.png'),
 
   cover: require('../assets/Images/Player/main.png'),
-  liked:require('../assets/Images/Library/Liked.png')
+  liked:require('../assets/Images/Library/Liked.png'),
+  logo:require('../assets/Images/Login/Logo.png')
 
 
 };

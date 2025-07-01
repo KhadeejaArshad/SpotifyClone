@@ -31,16 +31,21 @@ export default function Login() {
 
   <ScrollView style={styles.root}>
     
-    <ImageBackground source={images.login} style={styles.img}>
-      <View style={styles.textcontainer}>
-        <TextCmp weight="bold" size={28} marginV={4}>
-          Millions of Songs.
-        </TextCmp>
-        <TextCmp weight="bold" size={28} marginV={4}>
-          Free on Spotify.
-        </TextCmp>
-      </View>
-    </ImageBackground>
+   <ImageBackground source={images.login} style={styles.img}>
+  <View style={styles.imgContent}>
+    <Image source={images.logo} style={styles.imgLogo} />
+
+    <View style={styles.textcontainer}>
+      <TextCmp weight="bold" size={28} marginV={4}>
+        Millions of Songs.
+      </TextCmp>
+      <TextCmp weight="bold" size={28} marginV={4}>
+        Free on Spotify.
+      </TextCmp>
+    </View>
+  </View>
+</ImageBackground>
+
 
     <Pressable onPress={handleSpotifyLogin}>
       <View style={styles.buttonOuterContainer}>
@@ -91,18 +96,28 @@ const styles = StyleSheet.create({
 
 
  
-  img: {
+img: {
   width: '100%',
+  height: verticalScale(400),
   resizeMode: 'cover',
-  justifyContent: 'center', 
-  alignItems: 'center',    
-  paddingVertical: 30, 
-  height:verticalScale(465)     
 },
-textcontainer: {
-  flex:1,
+
+imgContent: {
+  flex: 1,
+  width: '100%',
+  justifyContent: 'flex-end', 
   alignItems: 'center',
-  justifyContent: 'flex-end',
+  paddingBottom: verticalScale(5),
+},
+
+imgLogo: {
+  width: scale(53),
+  height: scale(53),
+  marginBottom: verticalScale(12),
+},
+
+textcontainer: {
+  alignItems: 'center',
 },
 
 
