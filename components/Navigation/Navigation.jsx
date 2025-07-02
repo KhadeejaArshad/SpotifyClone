@@ -32,7 +32,7 @@ function HomeStackScreen() {
           headerTitle: 'Recently Played',
           headerStyle: {backgroundColor: '#111'},
           headerTintColor: 'white',
-          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(15)},
+          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
           headerRight: ({tintColor}) => <HeaderIcons tintColor={tintColor} />,
         }}
       />
@@ -103,7 +103,7 @@ export function BottomNavigation() {
         component={HomeStackScreen}
         options={{
           headerTitle: 'Recently Played',
-          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(15)},
+        
           headerShown: false,
 
           tabBarIcon: ({color, size}) => (
@@ -118,7 +118,7 @@ export function BottomNavigation() {
         component={SearchStackScreen}
         options={{
           headerTitle: 'Search',
-          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(15)},
+          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
           tabBarIcon: ({color, size}) => (
             <Ionicons name="search" color={color} size={size} />
           ),
@@ -130,7 +130,7 @@ export function BottomNavigation() {
         component={LibraryStackScreen}
         options={{
           headerTitle: userName,
-          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(15)},
+          headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
           headerLeft: () =>
             userImage ? (
               <Image

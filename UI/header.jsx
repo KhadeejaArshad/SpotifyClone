@@ -23,11 +23,11 @@ export default function HeaderIcons({ tintColor }) {
 
   return (
     <View style={styles.container}>
-      <AntDesign name='bell' color={tintColor} size={moderateScale(20)} />
-      <Ionicons name='reload' color={tintColor} size={moderateScale(20)} />
-      <AntDesign name='setting' color={tintColor} size={moderateScale(20)} />
+      <AntDesign name='bell' color={tintColor} size={moderateScale(18)} />
+      <Ionicons name='reload' color={tintColor} size={moderateScale(18)} />
+      <AntDesign name='setting' color={tintColor} size={moderateScale(18)} />
       <Pressable onPress={handleLogout}>
-        <AntDesign name='logout' color={tintColor} size={moderateScale(20)} />
+        <AntDesign name='logout' color={tintColor} size={moderateScale(18)} />
       </Pressable>
     </View>
   );
