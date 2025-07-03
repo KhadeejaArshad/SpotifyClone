@@ -33,6 +33,7 @@ function HomeStackScreen() {
           headerStyle: {backgroundColor: '#111'},
           headerTintColor: 'white',
           headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
+          headerTitleAlign: 'left',
           headerRight: ({tintColor}) => <HeaderIcons tintColor={tintColor} />,
         }}
       />
@@ -119,6 +120,7 @@ export function BottomNavigation() {
         options={{
           headerTitle: 'Search',
           headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
+          headerTitleAlign: 'left',
           tabBarIcon: ({color, size}) => (
             <Ionicons name="search" color={color} size={size} />
           ),
@@ -131,6 +133,7 @@ export function BottomNavigation() {
         options={{
           headerTitle: userName,
           headerTitleStyle: {fontFamily: fonts.bold, fontSize:moderateScale(18)},
+          headerTitleAlign: 'left',
           headerLeft: () =>
             userImage ? (
               <Image
