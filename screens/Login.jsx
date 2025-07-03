@@ -11,7 +11,7 @@ import {images} from '../assets/image';
 import {fonts} from '../utils/fonts';
 import LoginButoon from '../components/Login/LoginButoon';
 import {useDispatch} from 'react-redux';
-import {loginToSpotify} from '../utils/auth/auth';
+import {loginToSpotify, loginToSpotifywithoutuser} from '../utils/auth/auth';
 import {
   isAuthenticate,
   setExpireTime,
@@ -30,6 +30,19 @@ export default function Login() {
       const res = await loginToSpotify();
       console.log(res);
 
+      dispatch(isAuthenticate(res.accessToken));
+      dispatch(setRefreshToken(res.refreshToken));
+      dispatch(setExpireTime(res.accessTokenExpirationDate));
+    } catch (err) {
+      console.log('Spotify login failed', err?.response?.data);
+    }
+  };
+
+  const handleSpotifyLogin2 = async () => {
+    try {
+      const res = await loginToSpotifywithoutuser();
+      console.log(res);
+
       dispatch(isAuthenticate(res.access_token));
       // dispatch(setRefreshToken(res.refreshToken));
       // dispatch(setExpireTime(res.accessTokenExpirationDate));
@@ -37,6 +50,8 @@ export default function Login() {
       console.log('Spotify login failed', err?.response?.data);
     }
   };
+  
+
 
   return (
     <ScrollView style={styles.root}>
@@ -67,7 +82,7 @@ export default function Login() {
       <LoginButoon image={images.facebook} text="Continue with Facebook" />
       <LoginButoon image={images.apple} text="Continue with Apple" />
 
-      <Pressable onPress={handleSpotifyLogin}>
+      <Pressable onPress={handleSpotifyLogin2}>
         <TextCmp alignment="center" size={20} weight="Demi" marginV={10}>
           Log in
         </TextCmp>

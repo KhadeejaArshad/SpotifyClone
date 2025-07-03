@@ -2,20 +2,19 @@ import {authorize} from 'react-native-app-auth';
 import {authConfig} from './auth-config';
 import axios from 'axios';
 
-// export const loginToSpotify = async () => {
-//   try {
-//     const result = await authorize(authConfig);
-//     console.log(result)
-//     return result;
-//   } catch (error) {
-//     console.error('Spotify login failed', error);
-//     throw error;
-//   }
-// };
-
 export const loginToSpotify = async () => {
-  const clientId = 'your-client-id';
-  const clientSecret = 'your-client-secret';
+  try {
+    const result = await authorize(authConfig);
+    console.log(result)
+    return result;
+  } catch (error) {
+    console.error('Spotify login failed', error);
+    throw error;
+  }
+};
+
+export const loginToSpotifywithoutuser = async () => {
+ 
 
   const data = new URLSearchParams();
   data.append('grant_type', 'client_credentials');
