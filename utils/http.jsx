@@ -12,7 +12,7 @@ export async function getProfile(token) {
 import spotifyAPI from './axios';
 
 export const fetchRecentlyPlayedAlbums = async accessToken => {
-  const fallbackalbums = [
+  const fallbackAlbumIds = [
     '5dGWwsZ9iB2Xc3UKR0gif2',
     '1pzvBxYgT6OVwJLtHkrdQK',
     '43wFM1HquliY3iwKWzPN4y',
@@ -29,9 +29,7 @@ export const fetchRecentlyPlayedAlbums = async accessToken => {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      params: {
-        limit: 50,
-      },
+      params: { limit: 50 },
     });
 
     const albumsMap = new Map();
@@ -42,22 +40,40 @@ export const fetchRecentlyPlayedAlbums = async accessToken => {
       if (!albumsMap.has(album.id)) {
         albumsMap.set(album.id, {
           id: album.id,
-          image: {uri: album?.images[0]?.url},
+          image: { uri: album?.images[0]?.url },
           title: album.name,
           artist: album.artists.map(a => a.name).join(', '),
         });
       }
     });
 
-    return Array.from(albumsMap.values());
+    const result = Array.from(albumsMap.values());
+    if (result.length > 0) return result;
+
+    throw new Error('No recently played albums found');
   } catch (error) {
-    console.error(
-      'Failed to fetch recently played albums:',
-      error.response?.data || error.message,
-    );
-    return [];
+    console.error('Failed to fetch recently played albums:', error?.response?.data || error.message);
+
+    // Fallback
+    try {
+      const fallbackRes = await spotifyAPI.get('/albums', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { ids: fallbackAlbumIds.join(',') },
+      });
+
+      return fallbackRes.data.albums.map(album => ({
+        id: album.id,
+        image: { uri: album?.images?.[0]?.url },
+        title: album.name,
+        artist: album.artists.map(a => a.name).join(', '),
+      }));
+    } catch (fallbackError) {
+      console.error('Fallback album fetch failed:', fallbackError?.response?.data || fallbackError.message);
+      return [];
+    }
   }
 };
+
 
 export const fetchRecentlyPlayedArtists = async accessToken => {
   const fallbackArtistIds = [
@@ -202,11 +218,17 @@ export async function fetchAlbumTrack(id, accesstoken) {
   }
 }
 export async function fetchTrack(accesstoken) {
+  const fallbackTrackIds = [
+    '6habFhsOp2NvshLv26DqMb',
+    '0eGsygTp906u18L0Oimnem',
+    '3tjFYV6RSFtuktYl3ZtYcq',
+    '7qiZfU4dY1lWllzX7mPBI3',
+    '4uLU6hMCjMI75M1A2tKUQC',
+  ];
+
   try {
-    const res = await spotifyAPI.get(`/me/player/recently-played?limit=20`, {
-      headers: {
-        Authorization: `Bearer ${accesstoken}`,
-      },
+    const res = await spotifyAPI.get('/me/player/recently-played?limit=20', {
+      headers: { Authorization: `Bearer ${accesstoken}` },
     });
 
     const tracksMap = new Map();
@@ -229,21 +251,50 @@ export async function fetchTrack(accesstoken) {
           image: track.album.images[0]?.url,
           album: track.album.name,
           duration: `${minutes}:${seconds}`,
-
           played_at: item.played_at,
         });
       }
     });
 
-    return Array.from(tracksMap.values());
+    const result = Array.from(tracksMap.values());
+    if (result.length > 0) return result;
+
+    throw new Error('No recently played tracks found');
   } catch (error) {
-    console.error(
-      'Failed to fetch recently played tracks:',
-      error.response?.data || error.message,
-    );
-    return [];
+    console.error('Failed to fetch tracks:', error?.response?.data || error.message);
+
+    // Fallback
+    try {
+      const fallbackRes = await spotifyAPI.get('/tracks', {
+        headers: { Authorization: `Bearer ${accesstoken}` },
+        params: {
+          ids: fallbackTrackIds.join(','),
+        },
+      });
+
+      return fallbackRes.data.tracks.map(track => {
+        const minutes = Math.floor(track.duration_ms / 60000);
+        const seconds = Math.floor((track.duration_ms % 60000) / 1000)
+          .toString()
+          .padStart(2, '0');
+
+        return {
+          id: track.id,
+          name: track.name,
+          artist: track.artists[0]?.name,
+          image: track.album.images[0]?.url,
+          album: track.album.name,
+          duration: `${minutes}:${seconds}`,
+          played_at: null,
+        };
+      });
+    } catch (fallbackError) {
+      console.error('Fallback track fetch failed:', fallbackError?.response?.data || fallbackError.message);
+      return [];
+    }
   }
 }
+
 
 export async function getcurrentTrack(accesstoken, id) {
   try {

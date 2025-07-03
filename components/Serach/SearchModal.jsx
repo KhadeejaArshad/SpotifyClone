@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#282828',
     borderRadius: moderateScale(12),
     height: verticalScale(40),
-    width: '90%',
+    width: '85%',
     fontSize:moderateScale(28)
    
     

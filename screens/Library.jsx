@@ -30,7 +30,7 @@ const Library = () => {
           const extractedTracks = songs.items.map(item => item.track);
           setSongs(extractedTracks);
 
-          const playlistItems = playlists.items.map(item => ({
+          const playlistItems = playlists?.items?.map(item => ({
             ...item,
             type: 'playlist',
           }));
