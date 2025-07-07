@@ -11,7 +11,7 @@ import {images} from '../assets/image';
 import {fonts} from '../utils/fonts';
 import LoginButoon from '../components/Login/LoginButoon';
 import {useDispatch} from 'react-redux';
-import {loginToSpotify} from '../utils/auth/auth';
+import {handleOpenInAppBrowser, loginToSpotify} from '../utils/auth/auth';
 import {
   isAuthenticate,
   setExpireTime,
@@ -27,11 +27,11 @@ export default function Login() {
 
   const handleSpotifyLogin = async () => {
     try {
-      const res = await loginToSpotify();
+      const res = await handleOpenInAppBrowser();
       console.log(res);
 
       dispatch(isAuthenticate(res.access_token));
-      // dispatch(setRefreshToken(res.refreshToken));
+      dispatch(setRefreshToken(res.refresh_token));
       // dispatch(setExpireTime(res.accessTokenExpirationDate));
     } catch (err) {
       console.log('Spotify login failed', err?.response?.data);

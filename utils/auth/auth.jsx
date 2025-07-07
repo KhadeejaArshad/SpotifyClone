@@ -1,6 +1,7 @@
 import {authorize} from 'react-native-app-auth';
 import {authConfig} from './auth-config';
 import axios from 'axios';
+import InAppBrowser from 'react-native-inappbrowser-reborn';
 
 // export const loginToSpotify = async () => {
 //   try {
@@ -13,32 +14,54 @@ import axios from 'axios';
 //   }
 // };
 
-export const loginToSpotify = async () => {
-  const clientId = 'your-client-id';
-  const clientSecret = 'your-client-secret';
+export const handleOpenInAppBrowser = async () => {
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${
+    authConfig.clientId
+  }&redirect_uri=${authConfig.redirectUrl}&response_type=code&scope=${
+    authConfig.scopes
+  }&show_dialog=${true}`;
+  try {
+    const response = await InAppBrowser.openAuth(
+      authUrl,
+      authConfig.redirectUrl,
+      {},
+    );
+    console.log(response);
 
-  const data = new URLSearchParams();
-  data.append('grant_type', 'client_credentials');
-  data.append('client_id', authConfig.clientId);
-  data.append('client_secret', authConfig.clientSecret);
+    let code = response.url.split('code=')[1];
+    console.log(code, 'code');
+
+    if (code) {
+      const res = await getAccessToken(code);
+      return res;
+    }
+  } catch (error) {
+    console.log('Error opening InAppBrowser:', error);
+  }
+};
+
+export const getAccessToken = async code => {
+  const params = new URLSearchParams();
+  params.append('grant_type', 'authorization_code');
+  params.append('code', code);
+  params.append('redirect_uri', authConfig.redirectUrl);
+
+  const authString = `${authConfig.clientId}:${authConfig.clientSecret}`;
+  const encodedAuth = btoa(authString);
 
   try {
-    const response = await axios.post(
+    const result = await axios.post(
       'https://accounts.spotify.com/api/token',
-      data.toString(), // Important: send as a URL-encoded string
+      params.toString(),
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Basic ${encodedAuth}`,
         },
       },
     );
-
-    return response.data;
+    return result.data;
   } catch (error) {
-    console.error(
-      'Spotify login failed:',
-      error.response?.data || error.message,
-    );
-    throw error;
+    console.log('Spotify login failed', error.response?.data);
   }
 };
