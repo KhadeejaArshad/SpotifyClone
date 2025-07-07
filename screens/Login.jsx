@@ -31,25 +31,12 @@ export default function Login() {
 
   const handleSpotifyLogin = async () => {
     try {
-      const res = await loginToSpotify();
+      const res = await handleOpenInAppBrowser();
       console.log(res);
 
-      dispatch(isAuthenticate(res.accessToken));
-      dispatch(setRefreshToken(res.refreshToken));
+      dispatch(isAuthenticate(res.access_token));
+      dispatch(setRefreshToken(res.refresh_token));
       dispatch(setExpireTime(res.accessTokenExpirationDate));
-    } catch (err) {
-      console.log('Spotify login failed', err?.response?.data);
-    }
-  };
-
-  const handleSpotifyLogin2 = async () => {
-    try {
-      const res = await loginToSpotifywithoutuser();
-      console.log(res);
-
-      // dispatch(isAuthenticate(res.access_token));
-      // dispatch(setRefreshToken(res.refreshToken));
-      // dispatch(setExpireTime(res.accessTokenExpirationDate));
     } catch (err) {
       console.log('Spotify login failed', err?.response?.data);
     }

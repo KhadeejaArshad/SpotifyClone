@@ -48,24 +48,6 @@ export const getAccessToken = async code => {
 
   const authString = `${authConfig.clientId}:${authConfig.clientSecret}`;
   const encodedAuth = btoa(authString);
-export const loginToSpotify = async () => {
-  try {
-    const result = await authorize(authConfig);
-    console.log(result)
-    return result;
-  } catch (error) {
-    console.error('Spotify login failed', error);
-    throw error;
-  }
-};
-
-export const loginToSpotifywithoutuser = async () => {
- 
-
-  const data = new URLSearchParams();
-  data.append('grant_type', 'client_credentials');
-  data.append('client_id', authConfig.clientId);
-  data.append('client_secret', authConfig.clientSecret);
 
   try {
     const result = await axios.post(
