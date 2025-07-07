@@ -71,7 +71,7 @@ export default function Login() {
       <LoginButoon image={images.facebook} text="Continue with Facebook" />
       <LoginButoon image={images.apple} text="Continue with Apple" />
 
-      <Pressable onPress={handleSpotifyLogin2}>
+      <Pressable onPress={handleSpotifyLogin}>
         <TextCmp alignment="center" size={20} weight="Demi" marginV={10}>
           Log in
         </TextCmp>
