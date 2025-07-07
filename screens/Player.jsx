@@ -32,6 +32,7 @@ import {
 } from '../utils/http';
 import {setcurrAlbum} from '../store/track';
 import {useProgress} from 'react-native-track-player';
+import { Platform } from 'react-native';
 
 export default function Player({navigation}) {
   const [track, setTrack] = useState();
@@ -95,7 +96,7 @@ export default function Player({navigation}) {
   }
 
   return (
-    <ScrollView contentContainerStyle={{paddingBottom: verticalScale(30)}}>
+    <ScrollView>
       <LinearGradient
         colors={['#962419', '#661710', '#430E09']}
         style={styles.linearGradient}>
@@ -292,6 +293,9 @@ export default function Player({navigation}) {
 const styles = StyleSheet.create({
   linearGradient: {
     flex: 1,
+    paddingTop:Platform.OS=== 'ios'? verticalScale(0):verticalScale(30),
+    paddingBottom:Platform.OS=== 'ios'? verticalScale(0):verticalScale(100),
+
   },
   header: {
     flexDirection: 'row',
@@ -343,8 +347,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   img: {
-    width: scale(350),
-    height: scale(350),
+    width: Platform.OS=== 'ios'? scale(350): scale(380),
+    height: Platform.OS=== 'ios'? scale(350): scale(380),
     borderRadius: moderateScale(12),
   },
   duration: {
@@ -362,7 +366,7 @@ const styles = StyleSheet.create({
     padding: moderateScale(20),
   },
   bottom: {
-    paddingBottom: verticalScale(30),
+    paddingBottom: Platform.OS === 'ios' ? verticalScale(30) : 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
