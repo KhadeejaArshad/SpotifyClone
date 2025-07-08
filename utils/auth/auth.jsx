@@ -1,7 +1,6 @@
-import {authorize} from 'react-native-app-auth';
 import {authConfig} from './auth-config';
 import axios from 'axios';
-import InAppBrowser from 'react-native-inappbrowser-reborn';
+import {InAppBrowser} from 'react-native-inappbrowser-reborn';
 
 // export const loginToSpotify = async () => {
 //   try {
@@ -20,20 +19,31 @@ export const handleOpenInAppBrowser = async () => {
   }&redirect_uri=${authConfig.redirectUrl}&response_type=code&scope=${
     authConfig.scopes
   }&show_dialog=${true}`;
+
   try {
-    const response = await InAppBrowser.openAuth(
-      authUrl,
-      authConfig.redirectUrl,
-      {},
-    );
-    console.log(response);
+    if (InAppBrowser) {
+      const isAvailable = await InAppBrowser?.isAvailable();
+      if (!isAvailable) {
+        console.warn('InAppBrowser not available, using Linking');
+        await Linking.openURL(authUrl);
+        return;
+      }
 
-    let code = response.url.split('code=')[1];
-    console.log(code, 'code');
+      const result = await InAppBrowser.openAuth(
+        authUrl,
+        authConfig.redirectUrl,
+        {},
+      );
 
-    if (code) {
-      const res = await getAccessToken(code);
-      return res;
+      if (result.type === 'success' && result.url.includes('code=')) {
+        const code = result.url.split('code=')[1];
+        if (code) {
+          const res = await getAccessToken(code);
+          return res;
+        }
+      } else {
+        console.log('InAppBrowser cancelled or failed to authorize.');
+      }
     }
   } catch (error) {
     console.log('Error opening InAppBrowser:', error);
